@@ -1,0 +1,259 @@
+fileFormatVersion: 2
+guid: ea8f619d949938d4fb6ac1e9794f0633
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6629558249202422001
+    second: Inverted_0
+  - first:
+      213: -6665458358173666563
+    second: Inverted_1
+  - first:
+      213: 4933927706590044940
+    second: Inverted_2
+  - first:
+      213: -4544183346335567521
+    second: Inverted_3
+  - first:
+      213: -1894317818524396613
+    second: Inverted_4
+  - first:
+      213: -8635587716197602027
+    second: Inverted_5
+  - first:
+      213: 8167873352243726792
+    second: Inverted_6
+  - first:
+      213: 7319155262460776111
+    second: Inverted_7
+  - first:
+      213: -6316757980433568741
+    second: Inverted_8
+  - first:
+      213: 4588702105486373420
+    second: Inverted_9
+  - first:
+      213: 460666824015670145
+    second: Inverted_10
+  - first:
+      213: 5355026944698625352
+    second: Inverted_11
+  - first:
+      213: 7569667489990287543
+    second: Inverted_12
+  - first:
+      213: -402594033628619911
+    second: Inverted_13
+  - first:
+      213: -2359366940065047140
+    second: Inverted_14
+  - first:
+      213: 7577500640757056530
+    second: Inverted_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Inverted_2
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 651
+        width: 321
+        height: 349
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1a7fa73776674f489e5df63aec01a2e
+      internalID: 4933927706590044940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inverted_3
+      rect:
+        serializedVersion: 2
+        x: 659
+        y: 655
+        width: 341
+        height: 345
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 260ce8f6956599f4c89afb92c3de15e2
+      internalID: -4544183346335567521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inverted_12
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 0
+        width: 340
+        height: 330
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0195a62cbf75ab41ba628c0d4581dda
+      internalID: 7569667489990287543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: f420862df73148d4288345a4011a18ad
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Inverted_0: 6629558249202422001
+      Inverted_1: -6665458358173666563
+      Inverted_10: 460666824015670145
+      Inverted_11: 5355026944698625352
+      Inverted_12: 7569667489990287543
+      Inverted_13: -402594033628619911
+      Inverted_14: -2359366940065047140
+      Inverted_2: 4933927706590044940
+      Inverted_3: -4544183346335567521
+      Inverted_4: -1894317818524396613
+      Inverted_5: -8635587716197602027
+      Inverted_6: 8167873352243726792
+      Inverted_7: 7319155262460776111
+      Inverted_8: -6316757980433568741
+      Inverted_9: 4588702105486373420
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
