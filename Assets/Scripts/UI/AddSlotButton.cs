@@ -15,6 +15,7 @@ namespace ChestSystem.UI
         private void Start()
         {
             addSlotButton.onClick.AddListener(OnAddSlotButtonClicked);
+            transform.SetAsLastSibling();
         }
 
         private void OnAddSlotButtonClicked()

@@ -86,6 +86,7 @@ public class ChestController
             ChestView chest = chestPool.GetChest();
             chest.gameObject.SetActive(true);
             chest.Initialize(chestData);
+            chest.transform.SetSiblingIndex(emptySlot.transform.GetSiblingIndex());
             activeChests.Add(chest);
 
             Debug.Log($"Spawned chest: {chestData.chestType}, Active chests: {activeChests.Count}");
