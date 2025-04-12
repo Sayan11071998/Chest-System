@@ -23,7 +23,26 @@ namespace ChestSystem.Chest
                 chestImage.sprite = chestData.chestSprite;
 
             statusText.text = "LOCKED";
+            timerText.text = CalculateUnlockTime();
             chestButton.onClick.AddListener(OnChestClicked);
+        }
+
+        private string CalculateUnlockTime()
+        {
+            float time = chestData.unlockTimeInSeconds;
+
+            if (time < 3600)
+            {
+                int minutes = (int)(time / 60);
+                int seconds = (int)(time % 60);
+                return string.Format("{0} min {1} sec", minutes, seconds);
+            }
+            else
+            {
+                int hours = (int)(time / 3600);
+                int minutes = (int)((time % 3600) / 60);
+                return string.Format("{0} h {1} min", hours, minutes);
+            }
         }
 
         private void OnChestClicked()
