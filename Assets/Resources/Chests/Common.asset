@@ -13,4 +13,11 @@ MonoBehaviour:
   m_Name: Common
   m_EditorClassIdentifier: 
   chestType: 0
-  chestGenerationChance: 60
+  chestSprite: {fileID: -5281422124547630143, guid: e1b55c6fb89d20c4ba7dfddc4f1e59de, type: 3}
+  chestGenerationChance: 70
+  unlockTimeInSeconds: 900
+  instantOpenCostInGems: 15
+  minCoinReward: 100
+  maxCoinReward: 200
+  minGemReward: 10
+  maxGemReward: 20
