@@ -1,6 +1,6 @@
 namespace ChestSystem.Chest
 {
-    public enum ChestStates
+    public enum ChestState
     {
         LOCKED,
         UNLOCKING,
