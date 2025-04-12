@@ -1,16 +1,40 @@
+using System.Collections.Generic;
+using ChestSystem.Utilities;
 using UnityEngine;
 
-public class ChestPool : MonoBehaviour
+namespace ChestSystem.Chest
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class ChestPool : GenericObjectPool<ChestView>
     {
-        
-    }
+        private Dictionary<ChestType, GameObject> chestPrefabs;
+        private Transform chestParent;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public ChestPool(Dictionary<ChestType, GameObject> prefabs, Transform parent)
+        {
+            chestPrefabs = prefabs;
+            chestParent = parent;
+        }
+
+        public ChestView GetChestView(ChestType chestType) => GetItem<ChestView>();
+
+        protected override ChestView CreateItem<U>()
+        {
+            GameObject prefab = null;
+
+            foreach (var pair in chestPrefabs)
+            {
+                prefab = pair.Value;
+                break;
+            }
+
+            if (prefab == null)
+            {
+                Debug.LogError("No chest prefabs assigned to ChestPool!");
+                return null;
+            }
+
+            GameObject chestObject = GameObject.Instantiate(prefab, chestParent);
+            return chestObject.GetComponent<ChestView>();
+        }
     }
 }

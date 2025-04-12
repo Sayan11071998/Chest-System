@@ -17,8 +17,8 @@ namespace ChestSystem.Chest
         public int instantOpenCostInGems;
 
         [Header("Reward Section")]
-        public int minGoldReward;
-        public int maxGoldReward;
+        public int minCoinReward;
+        public int maxCoinReward;
         public int minGemReward;
         public int maxGemReward;
     }

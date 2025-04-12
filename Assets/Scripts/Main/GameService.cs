@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using ChestSystem.Chest;
 using ChestSystem.Player;
 using ChestSystem.Utilities;
+using ChestSystem.UI;
 using UnityEngine;
 
 namespace ChestSystem.Main
@@ -10,6 +11,7 @@ namespace ChestSystem.Main
     {
         public PlayerService playerService { get; private set; }
         public ChestService chestService { get; private set; }
+        public ChestUIManager uiManager { get; private set; }
 
         [Header("Player")]
         [SerializeField] private PlayerView playerView;
@@ -17,14 +19,24 @@ namespace ChestSystem.Main
 
         [Header("Chest")]
         [SerializeField] private List<ChestScriptableObject> chests;
-        // [SerializeField] private ChestView chestView;
+        [SerializeField] private ChestService chestServiceComponent;
+
+        [Header("UI")]
+        [SerializeField] private ChestUIManager chestUIManagerComponent;
 
         protected override void Awake()
         {
             base.Awake();
 
+            // Initialize player service
             playerService = new PlayerService(playerView, playerScriptableObject);
-            chestService = new ChestService(chests);
+
+            // Initialize chest service
+            chestService = chestServiceComponent;
+            chestService.Initialize(chests, playerService.PlayerController);
+
+            // Get UI manager
+            uiManager = chestUIManagerComponent;
         }
     }
 }
