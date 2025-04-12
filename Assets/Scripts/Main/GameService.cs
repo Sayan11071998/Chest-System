@@ -13,6 +13,7 @@ namespace ChestSystem.Main
 
         [Header("Player")]
         [SerializeField] private PlayerView playerView;
+        [SerializeField] private PlayerScriptableObject playerScriptableObject;
 
         [Header("Chest")]
         [SerializeField] private List<ChestScriptableObject> chests;
@@ -22,7 +23,7 @@ namespace ChestSystem.Main
         {
             base.Awake();
 
-            playerService = new PlayerService(playerView);
+            playerService = new PlayerService(playerView, playerScriptableObject);
             chestService = new ChestService(chests);
         }
     }

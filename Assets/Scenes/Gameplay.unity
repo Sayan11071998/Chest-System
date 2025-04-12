@@ -895,6 +895,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerView: {fileID: 1436811114}
+  playerScriptableObject: {fileID: 11400000, guid: 9dcc5bca929454441a4ea21bc7ffdaf4, type: 2}
   chests:
   - {fileID: 11400000, guid: 08ce348028591de45a9b2bd136e859ab, type: 2}
   - {fileID: 11400000, guid: 25de6aa6fb5aa834a8ac00e1fbbb0039, type: 2}
@@ -1015,7 +1016,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -20.513977, y: 0}
+  m_AnchoredPosition: {x: -20.513916, y: 0}
   m_SizeDelta: {x: 366.009, y: 81.395}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &977153535

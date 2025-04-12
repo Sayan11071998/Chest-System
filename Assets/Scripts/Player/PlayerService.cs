@@ -4,6 +4,6 @@ namespace ChestSystem.Player
     {
         public PlayerController PlayerController { get; private set; }
 
-        public PlayerService(PlayerView playerView) => PlayerController = new PlayerController(playerView);
+        public PlayerService(PlayerView playerView, PlayerScriptableObject playerScriptableObject) => PlayerController = new PlayerController(playerView, playerScriptableObject);
     }
 }
