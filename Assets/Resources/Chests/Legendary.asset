@@ -13,4 +13,11 @@ MonoBehaviour:
   m_Name: Legendary
   m_EditorClassIdentifier: 
   chestType: 3
-  chestGenerationChance: 10
+  chestSprite: {fileID: 2433344464911009892, guid: e1b55c6fb89d20c4ba7dfddc4f1e59de, type: 3}
+  chestGenerationChance: 5
+  unlockTimeInSeconds: 180800
+  instantOpenCostInGems: 180
+  minCoinReward: 1000
+  maxCoinReward: 1200
+  minGemReward: 80
+  maxGemReward: 100

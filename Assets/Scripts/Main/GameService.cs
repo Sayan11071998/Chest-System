@@ -17,14 +17,15 @@ namespace ChestSystem.Main
 
         [Header("Chest")]
         [SerializeField] private List<ChestScriptableObject> chests;
-        // [SerializeField] private ChestView chestView;
+        [SerializeField] private ChestView chestPrefab;
+        [SerializeField] private Transform chestScrollContent;
 
         protected override void Awake()
         {
             base.Awake();
 
             playerService = new PlayerService(playerView, playerScriptableObject);
-            chestService = new ChestService(chests);
+            chestService = new ChestService(chests, chestPrefab, chestScrollContent);
         }
     }
 }

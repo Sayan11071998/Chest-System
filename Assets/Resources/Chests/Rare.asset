@@ -10,7 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1174269a68bb4a2498946c92b6c51d8b, type: 3}
-  m_Name: Rara
+  m_Name: Rare
   m_EditorClassIdentifier: 
   chestType: 1
-  chestGenerationChance: 40
+  chestSprite: {fileID: 4714410783012859700, guid: e1b55c6fb89d20c4ba7dfddc4f1e59de, type: 3}
+  chestGenerationChance: 30
+  unlockTimeInSeconds: 1800
+  instantOpenCostInGems: 30
+  minCoinReward: 300
+  maxCoinReward: 500
+  minGemReward: 20
+  maxGemReward: 40
