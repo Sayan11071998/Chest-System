@@ -7,7 +7,7 @@ public class ChestController
     private List<ChestScriptableObject> chests;
     private ChestPool chestPool;
     private List<ChestView> activeChests = new List<ChestView>();
-    private int maxChestSlots = 4;
+    private int maxChestSlots = 5;
 
     public ChestController(List<ChestScriptableObject> chests, ChestPool chestPool)
     {

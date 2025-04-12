@@ -19,6 +19,9 @@ namespace ChestSystem.Chest
             this.chestData = chestData;
             this.chestType = chestData.chestType;
 
+            if (chestImage != null && chestData.chestSprite != null)
+                chestImage.sprite = chestData.chestSprite;
+
             statusText.text = "LOCKED";
             chestButton.onClick.AddListener(OnChestClicked);
         }
