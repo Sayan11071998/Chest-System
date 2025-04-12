@@ -1,18 +1,52 @@
 using System.Collections.Generic;
 using ChestSystem.Chest;
+using ChestSystem.Slot;
+using ChestSystem.UI;
 using UnityEngine;
 
 public class ChestController
 {
     private List<ChestScriptableObject> chests;
     private ChestPool chestPool;
+    private EmptySlotPool emptySlotPool;
     private List<ChestView> activeChests = new List<ChestView>();
-    private int maxChestSlots = 5;
+    private List<EmptySlotView> activeEmptySlots = new List<EmptySlotView>();
+    private int maxChestSlots;
 
-    public ChestController(List<ChestScriptableObject> chests, ChestPool chestPool)
+    public ChestController(List<ChestScriptableObject> chests, ChestPool chestPool, EmptySlotPool emptySlotPool, int initialMaxChestSlots)
     {
         this.chests = chests;
         this.chestPool = chestPool;
+        this.emptySlotPool = emptySlotPool;
+        this.maxChestSlots = initialMaxChestSlots;
+
+        CreateInitialEmptySlots();
+    }
+
+    private void CreateInitialEmptySlots()
+    {
+        for (int i = 0; i < maxChestSlots; i++)
+            CreateEmptySlot();
+    }
+
+    private void CreateEmptySlot()
+    {
+        EmptySlotView emptySlot = emptySlotPool.GetEmptySlot();
+        emptySlot.gameObject.SetActive(true);
+        emptySlot.Initialize();
+        activeEmptySlots.Add(emptySlot);
+
+        Debug.Log($"Created empty slot. Total slots: {activeEmptySlots.Count}");
+    }
+
+    public void IncreaseMaxChestSlots(int amountToIncrease)
+    {
+        maxChestSlots += amountToIncrease;
+
+        for (int i = 0; i < amountToIncrease; i++)
+            CreateEmptySlot();
+
+        Debug.Log($"Max chest slots increased to {maxChestSlots}");
     }
 
     public void GenerateRandomChest()
@@ -43,12 +77,19 @@ public class ChestController
 
     private void SpawnChest(ChestScriptableObject chestData)
     {
-        ChestView chest = chestPool.GetChest();
-        chest.gameObject.SetActive(true);
-        chest.Initialize(chestData);
-        activeChests.Add(chest);
+        if (activeEmptySlots.Count > 0)
+        {
+            EmptySlotView emptySlot = activeEmptySlots[0];
+            activeEmptySlots.RemoveAt(0);
+            emptySlotPool.ReturnEmptySlotToPool(emptySlot);
 
-        Debug.Log($"Spawned chest: {chestData.chestType}, Active chests: {activeChests.Count}");
+            ChestView chest = chestPool.GetChest();
+            chest.gameObject.SetActive(true);
+            chest.Initialize(chestData);
+            activeChests.Add(chest);
+
+            Debug.Log($"Spawned chest: {chestData.chestType}, Active chests: {activeChests.Count}");
+        }
     }
 
     public void RemoveChest(ChestView chest)
@@ -57,6 +98,8 @@ public class ChestController
         {
             activeChests.Remove(chest);
             chestPool.ReturnChestToPool(chest);
+
+            CreateEmptySlot();
         }
     }
 }

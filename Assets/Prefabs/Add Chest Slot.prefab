@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1560827610371750875}
   - component: {fileID: 2271948729430973040}
   - component: {fileID: 6463918983110903391}
+  - component: {fileID: 1080064250578746545}
   m_Layer: 5
   m_Name: Add Chest Slot
   m_TagString: Untagged
@@ -121,6 +122,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1080064250578746545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582202803265151637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5e31a8982686534296cd1bd202777d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slotIncreaseAmount: 1
 --- !u!1 &9094137159913322940
 GameObject:
   m_ObjectHideFlags: 0
