@@ -1,33 +1,35 @@
 using System.Collections.Generic;
-using ChestSystem.Chest;
 using UnityEngine;
 
-public class ChestController
+namespace ChestSystem.Chest
 {
-    private List<ChestScriptableObject> chests;
-
-    public ChestController(List<ChestScriptableObject> chests)
+    public class ChestController
     {
-        this.chests = chests;
-    }
+        private List<ChestScriptableObject> chests;
 
-    public void GenerateRandomChest()
-    {
-        if (chests == null || chests.Count == 0) return;
-
-        int totalChestGenerationChance = 0;
-        foreach (var chestItem in chests)
-            totalChestGenerationChance += chestItem.chestGenerationChance;
-
-        int randomValue = Random.Range(0, totalChestGenerationChance);
-        foreach (var chestItem in chests)
+        public ChestController(List<ChestScriptableObject> chests)
         {
-            if (randomValue < chestItem.chestGenerationChance)
+            this.chests = chests;
+        }
+
+        public void GenerateRandomChest()
+        {
+            if (chests == null || chests.Count == 0) return;
+
+            int totalChestGenerationChance = 0;
+            foreach (var chestItem in chests)
+                totalChestGenerationChance += chestItem.chestGenerationChance;
+
+            int randomValue = Random.Range(0, totalChestGenerationChance);
+            foreach (var chestItem in chests)
             {
-                Debug.Log($"Generated Chest: {chestItem.chestType}");
-                return;
+                if (randomValue < chestItem.chestGenerationChance)
+                {
+                    Debug.Log($"Generated Chest: {chestItem.chestType}");
+                    return;
+                }
+                randomValue -= chestItem.chestGenerationChance;
             }
-            randomValue -= chestItem.chestGenerationChance;
         }
     }
 }
