@@ -1,7 +1,6 @@
-using ChestSystem.Chest.Data;
 using UnityEngine;
 
-namespace ChestSystem.Chest
+namespace ChestSystem.Chest.Data
 {
     [CreateAssetMenu(fileName = "ChestScriptableObject", menuName = "Chest/NewChest")]
     public class ChestScriptableObject : ScriptableObject

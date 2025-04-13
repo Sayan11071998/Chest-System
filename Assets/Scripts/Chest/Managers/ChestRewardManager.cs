@@ -1,6 +1,7 @@
 using UnityEngine;
 using ChestSystem.Core;
 using ChestSystem.Chest.UI;
+using ChestSystem.Chest.Data;
 
 namespace ChestSystem.Chest.Managers
 {
