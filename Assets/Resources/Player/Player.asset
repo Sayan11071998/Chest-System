@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80edb401d5cda8141aee7f6f6d8096a2, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  coinCount: 125
-  gemsCount: 17
+  coinCount: 1016
+  gemsCount: 100
