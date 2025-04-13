@@ -12,7 +12,6 @@ namespace ChestSystem.Main
     {
         public PlayerService playerService { get; private set; }
         public ChestService chestService { get; private set; }
-        public EventService eventService { get; private set; }
 
         [Header("Player")]
         [SerializeField] private PlayerView playerView;
@@ -29,7 +28,7 @@ namespace ChestSystem.Main
         {
             base.Awake();
 
-            eventService = new EventService();
+            // No need to instantiate EventService anymore
             playerService = new PlayerService(playerView, playerScriptableObject);
             chestService = new ChestService(chests, chestPrefab, emptySlotPrefab, chestScrollContent, initialMaxChestSlots);
 
@@ -38,7 +37,7 @@ namespace ChestSystem.Main
 
         private void SubscribeToEvents()
         {
-            eventService.ChestEvents.OnChestCollected.AddListener(HandleChestCollected);
+            EventService.Instance.OnChestCollected.AddListener(HandleChestCollected);
         }
 
         private void HandleChestCollected(ChestCollectedEventArgs args)
@@ -51,7 +50,7 @@ namespace ChestSystem.Main
 
         private void OnDestroy()
         {
-            eventService.ChestEvents.OnChestCollected.RemoveListener(HandleChestCollected);
+            EventService.Instance.OnChestCollected.RemoveListener(HandleChestCollected);
         }
     }
 }

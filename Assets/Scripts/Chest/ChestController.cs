@@ -3,7 +3,6 @@ using ChestSystem.Chest;
 using ChestSystem.Slot;
 using ChestSystem.UI;
 using ChestSystem.Events;
-using ChestSystem.Main;
 using UnityEngine;
 
 public class ChestController
@@ -46,7 +45,7 @@ public class ChestController
     {
         maxChestSlots += amountToIncrease;
         slotManager.AddNewEmptySlots(amountToIncrease);
-        GameService.Instance.eventService.ChestEvents.OnMaxSlotsIncreased.InvokeEvent(maxChestSlots);
+        EventService.Instance.OnMaxSlotsIncreased.InvokeEvent(maxChestSlots);
         Debug.Log($"Max chest slots increased to {maxChestSlots}");
     }
 
@@ -66,7 +65,7 @@ public class ChestController
     public void SetUnlockingChest(ChestView chest)
     {
         currentlyUnlockingChest = chest;
-        GameService.Instance.eventService.ChestEvents.OnChestUnlockStarted.InvokeEvent(chest);
+        EventService.Instance.OnChestUnlockStarted.InvokeEvent(chest);
     }
 
     public void ChestUnlockCompleted(ChestView chest)
@@ -74,7 +73,7 @@ public class ChestController
         if (currentlyUnlockingChest == chest)
         {
             currentlyUnlockingChest = null;
-            GameService.Instance.eventService.ChestEvents.OnChestUnlockCompleted.InvokeEvent(chest);
+            EventService.Instance.OnChestUnlockCompleted.InvokeEvent(chest);
         }
     }
 
@@ -91,7 +90,7 @@ public class ChestController
                 currentlyUnlockingChest = null;
 
             var eventArgs = new ChestCollectedEventArgs(chest, coinsAwarded, gemsAwarded);
-            GameService.Instance.eventService.ChestEvents.OnChestCollected.InvokeEvent(eventArgs);
+            EventService.Instance.OnChestCollected.InvokeEvent(eventArgs);
 
             slotManager.ReplaceChestWithEmptySlot(chest);
         }
@@ -100,7 +99,7 @@ public class ChestController
     public void AddChest(ChestView chest)
     {
         activeChests.Add(chest);
-        GameService.Instance.eventService.ChestEvents.OnChestSpawned.InvokeEvent(chest);
+        EventService.Instance.OnChestSpawned.InvokeEvent(chest);
     }
 
     public void RemoveChest(ChestView chest)
