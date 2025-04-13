@@ -1,6 +1,6 @@
 using ChestSystem.Chest;
-using ChestSystem.Slot;
 using ChestSystem.UI;
+using ChestSystem.UI.Pools;
 using UnityEngine;
 
 public class ChestSlotManager

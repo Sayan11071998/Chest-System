@@ -1,8 +1,7 @@
-using ChestSystem.UI;
 using ChestSystem.Utilities;
 using UnityEngine;
 
-namespace ChestSystem.Slot
+namespace ChestSystem.UI.Pools
 {
     public class EmptySlotPool : GenericObjectPool<EmptySlotView>
     {

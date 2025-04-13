@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using ChestSystem.Slot;
 using ChestSystem.UI;
+using ChestSystem.UI.Pools;
 using UnityEngine;
 
 namespace ChestSystem.Chest
