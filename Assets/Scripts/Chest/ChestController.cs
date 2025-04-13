@@ -89,8 +89,7 @@ public class ChestController
             if (currentlyUnlockingChest == chest)
                 currentlyUnlockingChest = null;
 
-            var eventArgs = new ChestCollectedEventArgs(chest, coinsAwarded, gemsAwarded);
-            EventService.Instance.OnChestCollected.InvokeEvent(eventArgs);
+            EventService.Instance.OnChestCollected.InvokeEvent(chest, coinsAwarded, gemsAwarded);
 
             slotManager.ReplaceChestWithEmptySlot(chest);
         }

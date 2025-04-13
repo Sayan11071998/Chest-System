@@ -20,7 +20,7 @@ namespace ChestSystem.Events
         public GameEventController<ChestView> OnChestSpawned { get; private set; }
         public GameEventController<ChestView> OnChestUnlockStarted { get; private set; }
         public GameEventController<ChestView> OnChestUnlockCompleted { get; private set; }
-        public GameEventController<ChestCollectedEventArgs> OnChestCollected { get; private set; }
+        public EventController<ChestView, int, int> OnChestCollected { get; private set; }
         public GameEventController<int> OnMaxSlotsIncreased { get; private set; }
 
         public EventService()
@@ -28,7 +28,7 @@ namespace ChestSystem.Events
             OnChestSpawned = new GameEventController<ChestView>();
             OnChestUnlockStarted = new GameEventController<ChestView>();
             OnChestUnlockCompleted = new GameEventController<ChestView>();
-            OnChestCollected = new GameEventController<ChestCollectedEventArgs>();
+            OnChestCollected = new EventController<ChestView, int, int>();
             OnMaxSlotsIncreased = new GameEventController<int>();
         }
     }

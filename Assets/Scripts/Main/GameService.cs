@@ -28,7 +28,6 @@ namespace ChestSystem.Main
         {
             base.Awake();
 
-            // No need to instantiate EventService anymore
             playerService = new PlayerService(playerView, playerScriptableObject);
             chestService = new ChestService(chests, chestPrefab, emptySlotPrefab, chestScrollContent, initialMaxChestSlots);
 
@@ -40,12 +39,12 @@ namespace ChestSystem.Main
             EventService.Instance.OnChestCollected.AddListener(HandleChestCollected);
         }
 
-        private void HandleChestCollected(ChestCollectedEventArgs args)
+        private void HandleChestCollected(ChestView chest, int coinsAwarded, int gemsAwarded)
         {
-            playerService.PlayerController.UpdateCoinCount(playerService.PlayerController.CoinCount + args.CoinsAwarded);
-            playerService.PlayerController.UpdateGemsCount(playerService.PlayerController.GemsCount + args.GemsAwarded);
+            playerService.PlayerController.UpdateCoinCount(playerService.PlayerController.CoinCount + coinsAwarded);
+            playerService.PlayerController.UpdateGemsCount(playerService.PlayerController.GemsCount + gemsAwarded);
 
-            Debug.Log($"GameService: Player received {args.CoinsAwarded} coins and {args.GemsAwarded} gems from chest");
+            Debug.Log($"GameService: Player received {coinsAwarded} coins and {gemsAwarded} gems from chest");
         }
 
         private void OnDestroy()
