@@ -13,6 +13,7 @@ public class ChestController
     private List<EmptySlotView> activeEmptySlots = new List<EmptySlotView>();
     private int maxChestSlots;
     private Transform chestParent;
+    private ChestView currentlyUnlockingChest = null;
 
     public ChestController(List<ChestScriptableObject> chests, ChestPool chestPool, EmptySlotPool emptySlotPool, Transform chestParent, int initialMaxChestSlots)
     {
@@ -101,6 +102,16 @@ public class ChestController
         }
     }
 
+    public bool CanStartUnlocking() => currentlyUnlockingChest == null;
+
+    public void SetUnlockingChest(ChestView chest) => currentlyUnlockingChest = chest;
+
+    public void ChestUnlockCompleted(ChestView chest)
+    {
+        if (currentlyUnlockingChest == chest)
+            currentlyUnlockingChest = null;
+    }
+
     public void CollectChest(ChestView chest, out int coinsAwarded, out int gemsAwarded)
     {
         coinsAwarded = 0;
@@ -114,6 +125,9 @@ public class ChestController
                 coinsAwarded = Random.Range(chestData.minCoinReward, chestData.maxCoinReward + 1);
                 gemsAwarded = Random.Range(chestData.minGemReward, chestData.maxGemReward + 1);
             }
+
+            if (currentlyUnlockingChest == chest)
+                currentlyUnlockingChest = null;
 
             RemoveChest(chest);
         }

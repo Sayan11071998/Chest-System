@@ -12,12 +12,17 @@ namespace ChestSystem.Chest
         [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private TextMeshProUGUI statusText;
         [SerializeField] private Button chestButton;
+        [SerializeField] private TextMeshProUGUI gemCostText;
+        [SerializeField] private GameObject gemCostContainer;
 
         private ChestScriptableObject chestData;
         private ChestType chestType;
         private ChestState currentState = ChestState.LOCKED;
         private float remainingUnlockTime;
         private Coroutine unlockCoroutine;
+        private int currentGemCost;
+
+        private const float MINUTES_PER_GEM = 10f;
 
         public void Initialize(ChestScriptableObject chestData)
         {
@@ -26,27 +31,25 @@ namespace ChestSystem.Chest
             this.remainingUnlockTime = chestData.unlockTimeInSeconds;
             this.name = chestType.ToString();
 
-            InitializeChest(chestData);
-        }
-
-        private void InitializeChest(ChestScriptableObject chestData)
-        {
             if (chestImage != null && chestData.chestSprite != null)
                 chestImage.sprite = chestData.chestSprite;
 
+            if (gemCostContainer != null)
+                gemCostContainer.SetActive(false);
+
             SetChestState(ChestState.LOCKED);
             UpdateTimerDisplay();
+            UpdateGemCost();
             chestButton.onClick.AddListener(OnChestClicked);
         }
 
         private void OnChestClicked()
         {
             Debug.Log($"Chest clicked: {chestType}");
-
             switch (currentState)
             {
                 case ChestState.LOCKED:
-                    StartUnlocking();
+                    AttemptStartUnlocking();
                     break;
                 case ChestState.UNLOCKING:
                     AttemptInstantUnlock();
@@ -57,10 +60,27 @@ namespace ChestSystem.Chest
             }
         }
 
+        private void AttemptStartUnlocking()
+        {
+            // Check if another chest is already being unlocked
+            if (GameService.Instance.chestService.chestController.CanStartUnlocking())
+            {
+                StartUnlocking();
+            }
+            else
+            {
+                Debug.Log("Another chest is already being unlocked!");
+                // Could show a UI message to the player
+            }
+        }
+
         private void StartUnlocking()
         {
             if (unlockCoroutine != null)
                 StopCoroutine(unlockCoroutine);
+
+            // Register this chest as the one being unlocked
+            GameService.Instance.chestService.chestController.SetUnlockingChest(this);
 
             unlockCoroutine = StartCoroutine(UnlockTimerCoroutine());
         }
@@ -69,38 +89,88 @@ namespace ChestSystem.Chest
         {
             SetChestState(ChestState.UNLOCKING);
 
+            // Show gem cost container
+            if (gemCostContainer != null)
+                gemCostContainer.SetActive(true);
+
             while (remainingUnlockTime > 0)
             {
+                // Wait for one second
                 yield return new WaitForSeconds(1f);
+
+                // Decrease the timer
                 remainingUnlockTime -= 1f;
+
+                // Update the display
                 UpdateTimerDisplay();
+                UpdateGemCost();
             }
 
+            // Timer completed
             remainingUnlockTime = 0;
             UpdateTimerDisplay();
+
+            // Hide gem cost container
+            if (gemCostContainer != null)
+                gemCostContainer.SetActive(false);
+
             SetChestState(ChestState.UNLOCKED);
+
+            // Notify controller that unlocking is completed
+            GameService.Instance.chestService.chestController.ChestUnlockCompleted(this);
+        }
+
+        private void UpdateGemCost()
+        {
+            // Calculate gem cost: 1 gem per 10 minutes (rounded up)
+            float minutesRemaining = remainingUnlockTime / 60f;
+            currentGemCost = Mathf.CeilToInt(minutesRemaining / MINUTES_PER_GEM);
+
+            // Ensure minimum cost is 1 gem if there's any time left
+            if (remainingUnlockTime > 0 && currentGemCost == 0)
+                currentGemCost = 1;
+
+            // Update UI
+            if (gemCostText != null)
+                gemCostText.text = currentGemCost.ToString();
         }
 
         private void AttemptInstantUnlock()
         {
-            int gemsRequired = chestData.instantOpenCostInGems;
+            // Check if player has enough gems
             int playerGems = GameService.Instance.playerService.PlayerController.GemsCount;
 
-            if (playerGems >= gemsRequired)
+            if (playerGems >= currentGemCost)
             {
-                GameService.Instance.playerService.PlayerController.UpdateGemsCount(playerGems - gemsRequired);
+                // Deduct gems
+                GameService.Instance.playerService.PlayerController.UpdateGemsCount(playerGems - currentGemCost);
 
-                if (unlockCoroutine != null)
-                    StopCoroutine(unlockCoroutine);
-
-                remainingUnlockTime = 0;
-                UpdateTimerDisplay();
-                SetChestState(ChestState.UNLOCKED);
+                // Complete unlock immediately
+                CompleteUnlocking();
             }
             else
             {
                 Debug.Log("Not enough gems to instantly unlock chest!");
+                // Could display a UI message here
             }
+        }
+
+        private void CompleteUnlocking()
+        {
+            if (unlockCoroutine != null)
+                StopCoroutine(unlockCoroutine);
+
+            remainingUnlockTime = 0;
+            UpdateTimerDisplay();
+
+            // Hide gem cost container
+            if (gemCostContainer != null)
+                gemCostContainer.SetActive(false);
+
+            SetChestState(ChestState.UNLOCKED);
+
+            // Notify controller that unlocking is completed
+            GameService.Instance.chestService.chestController.ChestUnlockCompleted(this);
         }
 
         private void CollectChest()
@@ -109,10 +179,11 @@ namespace ChestSystem.Chest
             {
                 SetChestState(ChestState.COLLECTED);
 
-                int coinsAwarded;
-                int gemsAwarded;
+                // Get rewards from the chest
+                int coinsAwarded, gemsAwarded;
                 GameService.Instance.chestService.chestController.CollectChest(this, out coinsAwarded, out gemsAwarded);
 
+                // Update player resources
                 var playerController = GameService.Instance.playerService.PlayerController;
                 playerController.UpdateCoinCount(playerController.CoinCount + coinsAwarded);
                 playerController.UpdateGemsCount(playerController.GemsCount + gemsAwarded);
@@ -160,7 +231,7 @@ namespace ChestSystem.Chest
                     statusText.text = "LOCKED";
                     break;
                 case ChestState.UNLOCKING:
-                    statusText.text = "UNLOCKING";
+                    statusText.text = "UNLOCKING...";
                     break;
                 case ChestState.UNLOCKED:
                     statusText.text = "UNLOCKED";
