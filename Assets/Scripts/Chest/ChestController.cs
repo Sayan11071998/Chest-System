@@ -101,14 +101,47 @@ public class ChestController
         }
     }
 
+    public void CollectChest(ChestView chest, out int coinsAwarded, out int gemsAwarded)
+    {
+        coinsAwarded = 0;
+        gemsAwarded = 0;
+
+        if (activeChests.Contains(chest))
+        {
+            ChestScriptableObject chestData = GetChestData(chest);
+            if (chestData != null)
+            {
+                coinsAwarded = Random.Range(chestData.minCoinReward, chestData.maxCoinReward + 1);
+                gemsAwarded = Random.Range(chestData.minGemReward, chestData.maxGemReward + 1);
+            }
+
+            RemoveChest(chest);
+        }
+    }
+
+    private ChestScriptableObject GetChestData(ChestView chest)
+    {
+        foreach (var chestData in chests)
+        {
+            if (chestData.chestType.ToString() == chest.name)
+                return chestData;
+        }
+        return null;
+    }
+
     public void RemoveChest(ChestView chest)
     {
         if (activeChests.Contains(chest))
         {
+            int siblingIndex = chest.transform.GetSiblingIndex();
             activeChests.Remove(chest);
             chestPool.ReturnChestToPool(chest);
 
-            CreateEmptySlot();
+            EmptySlotView emptySlot = emptySlotPool.GetEmptySlot();
+            emptySlot.gameObject.SetActive(true);
+            emptySlot.Initialize();
+            emptySlot.transform.SetSiblingIndex(siblingIndex);
+            activeEmptySlots.Add(emptySlot);
         }
     }
 }
