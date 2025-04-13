@@ -1,3 +1,4 @@
+using ChestSystem.Chest.Core;
 using ChestSystem.Chest.UI;
 using ChestSystem.UI.Components;
 using ChestSystem.UI.Pools;
