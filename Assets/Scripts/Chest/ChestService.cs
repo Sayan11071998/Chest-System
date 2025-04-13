@@ -15,7 +15,7 @@ namespace ChestSystem.Chest
         {
             chestPool = new ChestPool(chestPrefab, chestParent);
             emptySlotPool = new EmptySlotPool(emptySlotPrefab, chestParent);
-            chestController = new ChestController(chests, chestPool, emptySlotPool, initialMaxChestSlots);
+            chestController = new ChestController(chests, chestPool, emptySlotPool, chestParent, initialMaxChestSlots);
         }
 
         public void GenerateRandomChest() => chestController.GenerateRandomChest();

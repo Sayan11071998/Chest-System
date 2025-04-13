@@ -15,17 +15,17 @@ namespace ChestSystem.UI
         private void Start()
         {
             addSlotButton.onClick.AddListener(OnAddSlotButtonClicked);
-            transform.SetAsLastSibling();
+            RepositionButtonToEnd();
         }
 
         private void OnAddSlotButtonClicked()
         {
             GameService.Instance.chestService.IncreaseMaxChestSlots(slotIncreaseAmount);
+            RepositionButtonToEnd();
         }
 
-        private void OnDestroy()
-        {
-            addSlotButton.onClick.RemoveListener(OnAddSlotButtonClicked);
-        }
+        private void RepositionButtonToEnd() => transform.SetAsLastSibling();
+
+        private void OnDestroy() => addSlotButton.onClick.RemoveListener(OnAddSlotButtonClicked);
     }
 }

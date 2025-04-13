@@ -12,12 +12,14 @@ public class ChestController
     private List<ChestView> activeChests = new List<ChestView>();
     private List<EmptySlotView> activeEmptySlots = new List<EmptySlotView>();
     private int maxChestSlots;
+    private Transform chestParent;
 
-    public ChestController(List<ChestScriptableObject> chests, ChestPool chestPool, EmptySlotPool emptySlotPool, int initialMaxChestSlots)
+    public ChestController(List<ChestScriptableObject> chests, ChestPool chestPool, EmptySlotPool emptySlotPool, Transform chestParent, int initialMaxChestSlots)
     {
         this.chests = chests;
         this.chestPool = chestPool;
         this.emptySlotPool = emptySlotPool;
+        this.chestParent = chestParent;
         this.maxChestSlots = initialMaxChestSlots;
 
         CreateInitialEmptySlots();
@@ -34,6 +36,9 @@ public class ChestController
         EmptySlotView emptySlot = emptySlotPool.GetEmptySlot();
         emptySlot.gameObject.SetActive(true);
         emptySlot.Initialize();
+
+        int lastIndex = chestParent.childCount - 1;
+        emptySlot.transform.SetSiblingIndex(lastIndex);
         activeEmptySlots.Add(emptySlot);
 
         Debug.Log($"Created empty slot. Total slots: {activeEmptySlots.Count}");
@@ -81,12 +86,15 @@ public class ChestController
         {
             EmptySlotView emptySlot = activeEmptySlots[0];
             activeEmptySlots.RemoveAt(0);
+
+            int siblingIndex = emptySlot.transform.GetSiblingIndex();
             emptySlotPool.ReturnEmptySlotToPool(emptySlot);
 
             ChestView chest = chestPool.GetChest();
             chest.gameObject.SetActive(true);
             chest.Initialize(chestData);
-            chest.transform.SetSiblingIndex(emptySlot.transform.GetSiblingIndex());
+
+            chest.transform.SetSiblingIndex(siblingIndex);
             activeChests.Add(chest);
 
             Debug.Log($"Spawned chest: {chestData.chestType}, Active chests: {activeChests.Count}");
@@ -97,10 +105,15 @@ public class ChestController
     {
         if (activeChests.Contains(chest))
         {
+            int siblingIndex = chest.transform.GetSiblingIndex();
             activeChests.Remove(chest);
             chestPool.ReturnChestToPool(chest);
 
-            CreateEmptySlot();
+            EmptySlotView emptySlot = emptySlotPool.GetEmptySlot();
+            emptySlot.gameObject.SetActive(true);
+            emptySlot.Initialize();
+            emptySlot.transform.SetSiblingIndex(siblingIndex);
+            activeEmptySlots.Add(emptySlot);
         }
     }
 }
