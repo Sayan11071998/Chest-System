@@ -19,6 +19,11 @@ namespace ChestSystem.Chest
             this.chestData = chestData;
             this.chestType = chestData.chestType;
 
+            InitializeChest(chestData);
+        }
+
+        private void InitializeChest(ChestScriptableObject chestData)
+        {
             if (chestImage != null && chestData.chestSprite != null)
                 chestImage.sprite = chestData.chestSprite;
 

@@ -105,15 +105,10 @@ public class ChestController
     {
         if (activeChests.Contains(chest))
         {
-            int siblingIndex = chest.transform.GetSiblingIndex();
             activeChests.Remove(chest);
             chestPool.ReturnChestToPool(chest);
 
-            EmptySlotView emptySlot = emptySlotPool.GetEmptySlot();
-            emptySlot.gameObject.SetActive(true);
-            emptySlot.Initialize();
-            emptySlot.transform.SetSiblingIndex(siblingIndex);
-            activeEmptySlots.Add(emptySlot);
+            CreateEmptySlot();
         }
     }
 }
