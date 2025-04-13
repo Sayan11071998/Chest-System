@@ -6,6 +6,7 @@ using ChestSystem.UI.Pools;
 using ChestSystem.UI.Components;
 using ChestSystem.Chest.Utilities;
 using ChestSystem.Chest.UI;
+using ChestSystem.Chest.Managers;
 
 public class ChestController
 {
