@@ -5,6 +5,7 @@ using UnityEngine;
 using ChestSystem.UI.Pools;
 using ChestSystem.UI.Components;
 using ChestSystem.Chest.Utilities;
+using ChestSystem.Chest.UI;
 
 public class ChestController
 {

@@ -1,5 +1,6 @@
 using UnityEngine;
 using ChestSystem.Core;
+using ChestSystem.Chest.UI;
 
 namespace ChestSystem.Chest
 {

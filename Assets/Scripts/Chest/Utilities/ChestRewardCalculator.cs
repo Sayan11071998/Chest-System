@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ChestSystem.Chest.UI;
 using UnityEngine;
 
 namespace ChestSystem.Chest.Utilities

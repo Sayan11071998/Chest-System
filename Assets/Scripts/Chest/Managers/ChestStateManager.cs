@@ -1,3 +1,4 @@
+using ChestSystem.Chest.UI;
 using TMPro;
 
 namespace ChestSystem.Chest

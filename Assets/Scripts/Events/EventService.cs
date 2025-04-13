@@ -1,4 +1,4 @@
-using ChestSystem.Chest;
+using ChestSystem.Chest.UI;
 
 namespace ChestSystem.Events
 {

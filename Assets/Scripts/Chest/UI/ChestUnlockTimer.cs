@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using ChestSystem.Core;
+using ChestSystem.Chest.UI;
 
 namespace ChestSystem.Chest
 {
