@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ChestSystem.Chest;
 using ChestSystem.Player;
+using ChestSystem.Player.UI;
 using ChestSystem.UI.Components;
 using ChestSystem.Utilities;
 using UnityEngine;

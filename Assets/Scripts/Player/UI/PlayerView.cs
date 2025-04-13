@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace ChestSystem.Player
+namespace ChestSystem.Player.UI
 {
     public class PlayerView : MonoBehaviour
     {
