@@ -15,6 +15,10 @@ public class ChestController
     private Transform chestParent;
     private ChestView currentlyUnlockingChest = null;
 
+    private ChestSlotManager slotManager;
+    private ChestGenerator chestGenerator;
+    private ChestRewardCalculator rewardCalculator;
+
     public ChestController(List<ChestScriptableObject> chests, ChestPool chestPool, EmptySlotPool emptySlotPool, Transform chestParent, int initialMaxChestSlots)
     {
         this.chests = chests;
@@ -23,83 +27,34 @@ public class ChestController
         this.chestParent = chestParent;
         this.maxChestSlots = initialMaxChestSlots;
 
-        CreateInitialEmptySlots();
+        slotManager = new ChestSlotManager(this, emptySlotPool, chestParent);
+        chestGenerator = new ChestGenerator(this, chests, chestPool);
+        rewardCalculator = new ChestRewardCalculator(chests);
+
+        slotManager.CreateInitialEmptySlots(initialMaxChestSlots);
     }
 
-    private void CreateInitialEmptySlots()
-    {
-        for (int i = 0; i < maxChestSlots; i++)
-            CreateEmptySlot();
-    }
-
-    private void CreateEmptySlot()
-    {
-        EmptySlotView emptySlot = emptySlotPool.GetEmptySlot();
-        emptySlot.gameObject.SetActive(true);
-        emptySlot.Initialize();
-
-        int lastIndex = chestParent.childCount - 1;
-        emptySlot.transform.SetSiblingIndex(lastIndex);
-        activeEmptySlots.Add(emptySlot);
-
-        Debug.Log($"Created empty slot. Total slots: {activeEmptySlots.Count}");
-    }
+    public List<ChestView> ActiveChests => activeChests;
+    public List<EmptySlotView> ActiveEmptySlots => activeEmptySlots;
+    public int MaxChestSlots => maxChestSlots;
+    public ChestSlotManager SlotManager => slotManager;
 
     public void IncreaseMaxChestSlots(int amountToIncrease)
     {
         maxChestSlots += amountToIncrease;
-
-        for (int i = 0; i < amountToIncrease; i++)
-            CreateEmptySlot();
-
+        slotManager.AddNewEmptySlots(amountToIncrease);
         Debug.Log($"Max chest slots increased to {maxChestSlots}");
     }
 
     public void GenerateRandomChest()
     {
-        if (chests == null || chests.Count == 0) return;
-
         if (activeChests.Count >= maxChestSlots)
         {
             Debug.Log("All chest slots are full!");
             return;
         }
 
-        int totalChestGenerationChance = 0;
-        foreach (var chestItem in chests)
-            totalChestGenerationChance += chestItem.chestGenerationChance;
-
-        int randomValue = Random.Range(0, totalChestGenerationChance);
-        foreach (var chestItem in chests)
-        {
-            if (randomValue < chestItem.chestGenerationChance)
-            {
-                SpawnChest(chestItem);
-                return;
-            }
-            randomValue -= chestItem.chestGenerationChance;
-        }
-    }
-
-    private void SpawnChest(ChestScriptableObject chestData)
-    {
-        if (activeEmptySlots.Count > 0)
-        {
-            EmptySlotView emptySlot = activeEmptySlots[0];
-            activeEmptySlots.RemoveAt(0);
-
-            int siblingIndex = emptySlot.transform.GetSiblingIndex();
-            emptySlotPool.ReturnEmptySlotToPool(emptySlot);
-
-            ChestView chest = chestPool.GetChest();
-            chest.gameObject.SetActive(true);
-            chest.Initialize(chestData);
-
-            chest.transform.SetSiblingIndex(siblingIndex);
-            activeChests.Add(chest);
-
-            Debug.Log($"Spawned chest: {chestData.chestType}, Active chests: {activeChests.Count}");
-        }
+        chestGenerator.GenerateRandomChest();
     }
 
     public bool CanStartUnlocking() => currentlyUnlockingChest == null;
@@ -119,43 +74,23 @@ public class ChestController
 
         if (activeChests.Contains(chest))
         {
-            ChestScriptableObject chestData = GetChestData(chest);
-            if (chestData != null)
-            {
-                coinsAwarded = Random.Range(chestData.minCoinReward, chestData.maxCoinReward + 1);
-                gemsAwarded = Random.Range(chestData.minGemReward, chestData.maxGemReward + 1);
-            }
+            rewardCalculator.CalculateRewards(chest, out coinsAwarded, out gemsAwarded);
 
             if (currentlyUnlockingChest == chest)
                 currentlyUnlockingChest = null;
 
-            RemoveChest(chest);
+            slotManager.ReplaceChestWithEmptySlot(chest);
         }
     }
 
-    private ChestScriptableObject GetChestData(ChestView chest)
-    {
-        foreach (var chestData in chests)
-        {
-            if (chestData.chestType.ToString() == chest.name)
-                return chestData;
-        }
-        return null;
-    }
+    public void AddChest(ChestView chest) => activeChests.Add(chest);
 
     public void RemoveChest(ChestView chest)
     {
-        if (activeChests.Contains(chest))
-        {
-            int siblingIndex = chest.transform.GetSiblingIndex();
-            activeChests.Remove(chest);
-            chestPool.ReturnChestToPool(chest);
-
-            EmptySlotView emptySlot = emptySlotPool.GetEmptySlot();
-            emptySlot.gameObject.SetActive(true);
-            emptySlot.Initialize();
-            emptySlot.transform.SetSiblingIndex(siblingIndex);
-            activeEmptySlots.Add(emptySlot);
-        }
+        activeChests.Remove(chest);
+        chestPool.ReturnChestToPool(chest);
     }
+
+    public void AddEmptySlot(EmptySlotView slot) => activeEmptySlots.Add(slot);
+    public void RemoveEmptySlot(EmptySlotView slot) => activeEmptySlots.Remove(slot);
 }

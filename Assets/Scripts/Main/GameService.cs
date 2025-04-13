@@ -3,11 +3,12 @@ using ChestSystem.Chest;
 using ChestSystem.Player;
 using ChestSystem.UI;
 using ChestSystem.Utilities;
+using ChestSystem.Events;
 using UnityEngine;
 
 namespace ChestSystem.Main
 {
-    public class GameService : GenericMonoSingelton<GameService>
+    public class GameService : GenericMonoSingleton<GameService>
     {
         public PlayerService playerService { get; private set; }
         public ChestService chestService { get; private set; }
@@ -29,6 +30,26 @@ namespace ChestSystem.Main
 
             playerService = new PlayerService(playerView, playerScriptableObject);
             chestService = new ChestService(chests, chestPrefab, emptySlotPrefab, chestScrollContent, initialMaxChestSlots);
+
+            SubscribeToEvents();
+        }
+
+        private void SubscribeToEvents()
+        {
+            ChestEvents.OnChestCollected += HandleChestCollected;
+        }
+
+        private void HandleChestCollected(ChestView chest, int coinsAwarded, int gemsAwarded)
+        {
+            playerService.PlayerController.UpdateCoinCount(playerService.PlayerController.CoinCount + coinsAwarded);
+            playerService.PlayerController.UpdateGemsCount(playerService.PlayerController.GemsCount + gemsAwarded);
+
+            Debug.Log($"GameService: Player received {coinsAwarded} coins and {gemsAwarded} gems from chest");
+        }
+
+        private void OnDestroy()
+        {
+            ChestEvents.OnChestCollected -= HandleChestCollected;
         }
     }
 }
