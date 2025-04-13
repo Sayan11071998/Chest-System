@@ -1,7 +1,7 @@
 using ChestSystem.Chest.UI;
 using TMPro;
 
-namespace ChestSystem.Chest
+namespace ChestSystem.Chest.Managers
 {
     public class ChestStateManager
     {
