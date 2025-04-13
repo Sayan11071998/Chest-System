@@ -1,3 +1,4 @@
+using ChestSystem.Chest.Data;
 using ChestSystem.Chest.UI;
 using TMPro;
 
