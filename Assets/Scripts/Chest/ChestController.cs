@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using ChestSystem.Chest;
 using ChestSystem.Slot;
 using ChestSystem.UI;
+using ChestSystem.Events;
+using ChestSystem.Main;
 using UnityEngine;
 
 public class ChestController
@@ -18,6 +20,8 @@ public class ChestController
     private ChestSlotManager slotManager;
     private ChestGenerator chestGenerator;
     private ChestRewardCalculator rewardCalculator;
+
+    public ChestSlotManager SlotManager => slotManager;
 
     public ChestController(List<ChestScriptableObject> chests, ChestPool chestPool, EmptySlotPool emptySlotPool, Transform chestParent, int initialMaxChestSlots)
     {
@@ -37,12 +41,12 @@ public class ChestController
     public List<ChestView> ActiveChests => activeChests;
     public List<EmptySlotView> ActiveEmptySlots => activeEmptySlots;
     public int MaxChestSlots => maxChestSlots;
-    public ChestSlotManager SlotManager => slotManager;
 
     public void IncreaseMaxChestSlots(int amountToIncrease)
     {
         maxChestSlots += amountToIncrease;
         slotManager.AddNewEmptySlots(amountToIncrease);
+        GameService.Instance.eventService.ChestEvents.OnMaxSlotsIncreased.InvokeEvent(maxChestSlots);
         Debug.Log($"Max chest slots increased to {maxChestSlots}");
     }
 
@@ -59,12 +63,19 @@ public class ChestController
 
     public bool CanStartUnlocking() => currentlyUnlockingChest == null;
 
-    public void SetUnlockingChest(ChestView chest) => currentlyUnlockingChest = chest;
+    public void SetUnlockingChest(ChestView chest)
+    {
+        currentlyUnlockingChest = chest;
+        GameService.Instance.eventService.ChestEvents.OnChestUnlockStarted.InvokeEvent(chest);
+    }
 
     public void ChestUnlockCompleted(ChestView chest)
     {
         if (currentlyUnlockingChest == chest)
+        {
             currentlyUnlockingChest = null;
+            GameService.Instance.eventService.ChestEvents.OnChestUnlockCompleted.InvokeEvent(chest);
+        }
     }
 
     public void CollectChest(ChestView chest, out int coinsAwarded, out int gemsAwarded)
@@ -79,11 +90,18 @@ public class ChestController
             if (currentlyUnlockingChest == chest)
                 currentlyUnlockingChest = null;
 
+            var eventArgs = new ChestCollectedEventArgs(chest, coinsAwarded, gemsAwarded);
+            GameService.Instance.eventService.ChestEvents.OnChestCollected.InvokeEvent(eventArgs);
+
             slotManager.ReplaceChestWithEmptySlot(chest);
         }
     }
 
-    public void AddChest(ChestView chest) => activeChests.Add(chest);
+    public void AddChest(ChestView chest)
+    {
+        activeChests.Add(chest);
+        GameService.Instance.eventService.ChestEvents.OnChestSpawned.InvokeEvent(chest);
+    }
 
     public void RemoveChest(ChestView chest)
     {

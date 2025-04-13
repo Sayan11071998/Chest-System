@@ -38,6 +38,7 @@ public class ChestGenerator
     private void SpawnChest(ChestScriptableObject chestData)
     {
         int siblingIndex;
+
         if (controller.SlotManager.GetAndRemoveEmptySlot(out siblingIndex))
         {
             ChestView chest = chestPool.GetChest();
@@ -48,6 +49,10 @@ public class ChestGenerator
             controller.AddChest(chest);
 
             Debug.Log($"Spawned chest: {chestData.chestType}, Active chests: {controller.ActiveChests.Count}");
+        }
+        else
+        {
+            Debug.LogWarning("No empty slots available!");
         }
     }
 }

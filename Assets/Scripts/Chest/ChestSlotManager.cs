@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using ChestSystem.Chest;
 using ChestSystem.Slot;
 using ChestSystem.UI;

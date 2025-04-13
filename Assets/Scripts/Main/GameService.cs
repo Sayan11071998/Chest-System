@@ -12,6 +12,7 @@ namespace ChestSystem.Main
     {
         public PlayerService playerService { get; private set; }
         public ChestService chestService { get; private set; }
+        public EventService eventService { get; private set; }
 
         [Header("Player")]
         [SerializeField] private PlayerView playerView;
@@ -28,6 +29,7 @@ namespace ChestSystem.Main
         {
             base.Awake();
 
+            eventService = new EventService();
             playerService = new PlayerService(playerView, playerScriptableObject);
             chestService = new ChestService(chests, chestPrefab, emptySlotPrefab, chestScrollContent, initialMaxChestSlots);
 
@@ -36,20 +38,20 @@ namespace ChestSystem.Main
 
         private void SubscribeToEvents()
         {
-            ChestEvents.OnChestCollected += HandleChestCollected;
+            eventService.ChestEvents.OnChestCollected.AddListener(HandleChestCollected);
         }
 
-        private void HandleChestCollected(ChestView chest, int coinsAwarded, int gemsAwarded)
+        private void HandleChestCollected(ChestCollectedEventArgs args)
         {
-            playerService.PlayerController.UpdateCoinCount(playerService.PlayerController.CoinCount + coinsAwarded);
-            playerService.PlayerController.UpdateGemsCount(playerService.PlayerController.GemsCount + gemsAwarded);
+            playerService.PlayerController.UpdateCoinCount(playerService.PlayerController.CoinCount + args.CoinsAwarded);
+            playerService.PlayerController.UpdateGemsCount(playerService.PlayerController.GemsCount + args.GemsAwarded);
 
-            Debug.Log($"GameService: Player received {coinsAwarded} coins and {gemsAwarded} gems from chest");
+            Debug.Log($"GameService: Player received {args.CoinsAwarded} coins and {args.GemsAwarded} gems from chest");
         }
 
         private void OnDestroy()
         {
-            ChestEvents.OnChestCollected -= HandleChestCollected;
+            eventService.ChestEvents.OnChestCollected.RemoveListener(HandleChestCollected);
         }
     }
 }
