@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using ChestSystem.Chest;
-using ChestSystem.UI;
 using ChestSystem.Events;
 using UnityEngine;
 using ChestSystem.UI.Pools;
+using ChestSystem.UI.Components;
 
 public class ChestController
 {

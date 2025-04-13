@@ -1,3 +1,4 @@
+using ChestSystem.UI.Components;
 using ChestSystem.Utilities;
 using UnityEngine;
 

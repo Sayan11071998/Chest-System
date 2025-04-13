@@ -1,5 +1,5 @@
 using ChestSystem.Chest;
-using ChestSystem.UI;
+using ChestSystem.UI.Components;
 using ChestSystem.UI.Pools;
 using UnityEngine;
 

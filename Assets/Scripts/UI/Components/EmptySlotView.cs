@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ChestSystem.UI
+namespace ChestSystem.UI.Components
 {
     public class EmptySlotView : MonoBehaviour
     {
