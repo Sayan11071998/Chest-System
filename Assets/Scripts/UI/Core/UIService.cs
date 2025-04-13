@@ -2,7 +2,7 @@ using ChestSystem.Main;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ChestSystem.UI
+namespace ChestSystem.UI.Core
 {
     public class UIService : MonoBehaviour
     {
