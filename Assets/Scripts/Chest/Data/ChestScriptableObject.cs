@@ -1,3 +1,4 @@
+using ChestSystem.Chest.Data;
 using UnityEngine;
 
 namespace ChestSystem.Chest
