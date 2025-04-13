@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c662e145a6a9fc1499cd7e5c1be72bac
+guid: f03a67e8ba38eea48859a2b81d03ee16
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7835307028352170606
-    second: Rare Chest Open 1_0
+      213: -5178870542045671803
+    second: Epic Chest Closed_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Rare Chest Open 1_0
+      name: Epic Chest Closed_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 29582fc55c5634390800000000000000
-      internalID: -7835307028352170606
+      spriteID: 58e02ab4ea4f028b0800000000000000
+      internalID: -5178870542045671803
       vertices: []
       indices: 
       edges: []

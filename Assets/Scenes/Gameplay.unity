@@ -678,6 +678,7 @@ GameObject:
   - component: {fileID: 615284144}
   - component: {fileID: 615284146}
   - component: {fileID: 615284145}
+  - component: {fileID: 615284147}
   m_Layer: 5
   m_Name: Chest Generation Button Text
   m_TagString: Untagged
@@ -724,17 +725,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Generate Chest
+  m_text: GENERATE CHEST
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 47895f2bc02bbec469cb929ab9089940, type: 2}
-  m_sharedMaterial: {fileID: 3003046444445979489, guid: 47895f2bc02bbec469cb929ab9089940, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9e970898d4351b044a2b40e0f53ee6da, type: 2}
+  m_sharedMaterial: {fileID: -1067768835197692607, guid: 9e970898d4351b044a2b40e0f53ee6da, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278208361
-  m_fontColor: {r: 0.4113207, g: 0.279202, b: 0, a: 1}
+    rgba: 4281811037
+  m_fontColor: {r: 0.3647059, g: 0.2509804, b: 0.21568628, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -751,8 +752,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 80
+  m_fontSize: 45
+  m_fontSizeBase: 45
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -761,8 +762,8 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_wordSpacing: 0
+  m_characterSpacing: 1.5
+  m_wordSpacing: 1.5
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
@@ -803,6 +804,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 615284143}
   m_CullTransparentMesh: 1
+--- !u!114 &615284147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 615284143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.2}
+  m_EffectDistance: {x: -1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1625,6 +1641,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5760944994948549488, guid: b666093ca839fe5478ef623cedca1c1d, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 9e970898d4351b044a2b40e0f53ee6da, type: 2}
+    - target: {fileID: 5760944994948549488, guid: b666093ca839fe5478ef623cedca1c1d, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -1067768835197692607, guid: 9e970898d4351b044a2b40e0f53ee6da, type: 2}
+    - target: {fileID: 5760944994948549488, guid: b666093ca839fe5478ef623cedca1c1d, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1941,10 +1969,10 @@ RectTransform:
   - {fileID: 615284144}
   m_Father: {fileID: 774042}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -760, y: -40}
+  m_SizeDelta: {x: 500, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1756036042
 MonoBehaviour:
@@ -1967,7 +1995,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0.972549, g: 0.76862746, b: 0.44313726, a: 1}
     m_HighlightedColor: {r: 0.8784314, g: 0.6039216, b: 0.24313726, a: 1}
     m_PressedColor: {r: 0.82641506, g: 0.46932214, b: 0, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -2003,15 +2031,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.972549, g: 0.76862746, b: 0.44313726, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 2929338783959988736, guid: f4b2bc418da3ced49915e3f5fc3280c3, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: -5177388603050735206, guid: e4d2e84d3ec867b448298f623538c3ba, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

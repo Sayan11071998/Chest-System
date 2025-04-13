@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Epic
   m_EditorClassIdentifier: 
   chestType: 2
-  chestSprite: {fileID: 826535257128478662, guid: e1b55c6fb89d20c4ba7dfddc4f1e59de, type: 3}
+  chestSprite: {fileID: -5178870542045671803, guid: f03a67e8ba38eea48859a2b81d03ee16, type: 3}
   chestGenerationChance: 15
   unlockTimeInSeconds: 3600
   instantOpenCostInGems: 60
