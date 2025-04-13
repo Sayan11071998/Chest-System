@@ -1,7 +1,7 @@
 using ChestSystem.Utilities;
 using UnityEngine;
 
-namespace ChestSystem.Chest
+namespace ChestSystem.Chest.Utilities
 {
     public class ChestPool : GenericObjectPool<ChestView>
     {
