@@ -1,3 +1,4 @@
+using ChestSystem.Player.Data;
 using ChestSystem.Player.UI;
 
 namespace ChestSystem.Player
