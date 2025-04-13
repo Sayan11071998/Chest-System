@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Rare
   m_EditorClassIdentifier: 
   chestType: 1
-  chestSprite: {fileID: 4714410783012859700, guid: e1b55c6fb89d20c4ba7dfddc4f1e59de, type: 3}
+  chestSprite: {fileID: 5441704468891485564, guid: 8028d164318bceb4c8e5edf33f8918ee, type: 3}
   chestGenerationChance: 30
   unlockTimeInSeconds: 1800
   instantOpenCostInGems: 30
