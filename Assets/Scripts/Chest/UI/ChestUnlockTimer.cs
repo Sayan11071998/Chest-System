@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
-using ChestSystem.Main;
+using ChestSystem.Core;
 
 namespace ChestSystem.Chest
 {

@@ -7,7 +7,7 @@ using ChestSystem.UI.Components;
 using ChestSystem.Utilities;
 using UnityEngine;
 
-namespace ChestSystem.Main
+namespace ChestSystem.Core
 {
     public class GameService : GenericMonoSingleton<GameService>
     {
