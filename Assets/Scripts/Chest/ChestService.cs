@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using ChestSystem.Slot;
+using ChestSystem.UI;
 using UnityEngine;
 
 namespace ChestSystem.Chest
@@ -7,13 +9,16 @@ namespace ChestSystem.Chest
     {
         public ChestController chestController { get; private set; }
         private ChestPool chestPool;
+        private EmptySlotPool emptySlotPool;
 
-        public ChestService(List<ChestScriptableObject> chests, ChestView chestPrefab, Transform chestParent)
+        public ChestService(List<ChestScriptableObject> chests, ChestView chestPrefab, EmptySlotView emptySlotPrefab, Transform chestParent, int initialMaxChestSlots)
         {
             chestPool = new ChestPool(chestPrefab, chestParent);
-            chestController = new ChestController(chests, chestPool);
+            emptySlotPool = new EmptySlotPool(emptySlotPrefab, chestParent);
+            chestController = new ChestController(chests, chestPool, emptySlotPool, chestParent, initialMaxChestSlots);
         }
 
         public void GenerateRandomChest() => chestController.GenerateRandomChest();
+        public void IncreaseMaxChestSlots(int amountToIncrease) => chestController.IncreaseMaxChestSlots(amountToIncrease);
     }
 }
