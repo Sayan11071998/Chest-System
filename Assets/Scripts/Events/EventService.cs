@@ -10,9 +10,7 @@ namespace ChestSystem.Events
             get
             {
                 if (instance == null)
-                {
                     instance = new EventService();
-                }
                 return instance;
             }
         }
