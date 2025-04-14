@@ -25,6 +25,9 @@ namespace ChestSystem.Chest.Core
         private ChestGenerator chestGenerator;
         private ChestRewardCalculator rewardCalculator;
 
+        public List<ChestView> ActiveChests => activeChests;
+        public List<EmptySlotView> ActiveEmptySlots => activeEmptySlots;
+        public int MaxChestSlots => maxChestSlots;
         public ChestSlotManager SlotManager => slotManager;
 
         public ChestController(List<ChestScriptableObject> chests, ChestPool chestPool, EmptySlotPool emptySlotPool, Transform chestParent, int initialMaxChestSlots)
@@ -41,10 +44,6 @@ namespace ChestSystem.Chest.Core
 
             slotManager.CreateInitialEmptySlots(initialMaxChestSlots);
         }
-
-        public List<ChestView> ActiveChests => activeChests;
-        public List<EmptySlotView> ActiveEmptySlots => activeEmptySlots;
-        public int MaxChestSlots => maxChestSlots;
 
         public void IncreaseMaxChestSlots(int amountToIncrease)
         {

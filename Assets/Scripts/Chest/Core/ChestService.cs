@@ -24,6 +24,6 @@ namespace ChestSystem.Chest.Core
         public void GenerateRandomChest() => chestController.GenerateRandomChest();
         public void IncreaseMaxChestSlots(int amountToIncrease) => chestController.IncreaseMaxChestSlots(amountToIncrease);
         public void CollectChest(ChestView chest, out int coinsAwarded, out int gemsAwarded) =>
-            chestController.CollectChest(chest, out coinsAwarded, out gemsAwarded);
+                chestController.CollectChest(chest, out coinsAwarded, out gemsAwarded);
     }
 }
