@@ -33,7 +33,7 @@ namespace ChestSystem.Chest.Managers
                     statusText.text = "LOCKED";
                     break;
                 case ChestState.UNLOCKING:
-                    statusText.text = "UNLOCKING...";
+                    statusText.text = "UNLOCKING";
                     break;
                 case ChestState.UNLOCKED:
                     statusText.text = "UNLOCKED";
