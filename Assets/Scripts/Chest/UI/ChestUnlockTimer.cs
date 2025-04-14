@@ -123,7 +123,7 @@ namespace ChestSystem.Chest.UI
                 currentGemCost = 1;
 
             if (gemCostText != null)
-                gemCostText.text = currentGemCost.ToString();
+                gemCostText.text = $"Cost: {currentGemCost}";
         }
 
         private void UpdateTimerDisplay()
