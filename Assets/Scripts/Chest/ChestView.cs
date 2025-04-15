@@ -45,6 +45,7 @@ namespace ChestSystem.Chest.UI
             UpdateTimerDisplay();
             UpdateGemCostText();
 
+            controller.ChestStateMachine.ChangeState(ChestState.LOCKED);
             chestButton.onClick.AddListener(OnChestClicked);
         }
 
