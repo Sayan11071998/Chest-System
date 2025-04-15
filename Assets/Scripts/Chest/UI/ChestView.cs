@@ -1,10 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using ChestSystem.Chest.Managers;
 using ChestSystem.Chest.Data;
-using ChestSystem.Chest.Core;
-using ChestSystem.Utilities;
-using System.Collections;
 
 namespace ChestSystem.Chest.UI
 {
@@ -17,171 +15,69 @@ namespace ChestSystem.Chest.UI
         [SerializeField] private TextMeshProUGUI gemCostText;
         [SerializeField] private GameObject gemCostContainer;
 
-        // Model
-        private ChestModel model;
+        private ChestScriptableObject chestData;
+        private ChestStateManager stateManager;
+        private ChestUnlockTimer unlockTimer;
+        private ChestRewardManager rewardManager;
 
-        // State Machine
-        private ChestStateMachine stateMachine;
-
-        // References
-        private ChestController controller;
-        private Coroutine unlockCoroutine;
-
-        // Properties
-        public ChestType ChestType => model?.ChestType ?? ChestType.COMMON;
-        public ChestState CurrentState => model?.CurrentState ?? ChestState.LOCKED;
+        public ChestType ChestType => chestData?.chestType ?? ChestType.COMMON;
+        public ChestState CurrentState => stateManager?.CurrentState ?? ChestState.LOCKED;
 
         private void Awake()
         {
-            // State machine will be initialized in Initialize method
+            stateManager = new ChestStateManager(this);
+            unlockTimer = new ChestUnlockTimer(this);
+            rewardManager = new ChestRewardManager(this);
         }
 
-        public void Initialize(ChestScriptableObject chestData, ChestController controller)
+        public void Initialize(ChestScriptableObject chestData)
         {
-            this.controller = controller;
-
-            // Create the model
-            model = new ChestModel(chestData);
-            model.OnStateChanged += OnModelStateChanged;
-            model.OnUnlockTimeUpdated += OnModelTimerUpdated;
-            model.OnGemCostUpdated += OnModelGemCostUpdated;
-
-            // Set visual elements
+            this.chestData = chestData;
             this.name = chestData.chestType.ToString();
+
             if (chestImage != null && chestData.chestSprite != null)
                 chestImage.sprite = chestData.chestSprite;
 
-            // Set up the state machine
-            stateMachine = new ChestStateMachine();
-            stateMachine.Initialize(this, controller);
-
-            // Set up the button
-            chestButton.onClick.AddListener(OnChestClicked);
-
-            // Initial visibility configurations
             if (gemCostContainer != null)
                 gemCostContainer.SetActive(false);
 
-            // Start with locked state
-            stateMachine.ChangeState(ChestState.LOCKED);
+            stateManager.Initialize(statusText);
+            unlockTimer.Initialize(chestData.unlockTimeInSeconds, timerText, gemCostText, gemCostContainer);
+            rewardManager.Initialize(chestData);
+
+            chestButton.onClick.AddListener(OnChestClicked);
         }
 
         private void OnChestClicked()
         {
             Debug.Log($"Chest clicked: {ChestType}");
-            stateMachine.HandleClick();
-        }
 
-        // Model Event Handlers
-        private void OnModelStateChanged(ChestState newState)
-        {
-            // State changes are handled by the state machine
-        }
-
-        private void OnModelTimerUpdated(float remainingTime)
-        {
-            SetTimerText(model.GetFormattedTimeRemaining());
-        }
-
-        private void OnModelGemCostUpdated(int gemCost)
-        {
-            UpdateGemCostDisplay(gemCost);
-        }
-
-        // UI Updates
-        public void SetTimerText(string text)
-        {
-            if (timerText != null)
-                timerText.text = text;
-        }
-
-        public void SetStatusText(string text)
-        {
-            if (statusText != null)
-                statusText.text = text;
-        }
-
-        public void ShowGemCost()
-        {
-            if (gemCostContainer != null)
-                gemCostContainer.SetActive(true);
-
-            UpdateGemCostDisplay(model.CurrentGemCost);
-        }
-
-        public void HideGemCost()
-        {
-            if (gemCostContainer != null)
-                gemCostContainer.SetActive(false);
-        }
-
-        private void UpdateGemCostDisplay(int gemCost)
-        {
-            if (gemCostText != null)
-                gemCostText.text = $"Cost: {gemCost}";
-        }
-
-        // State Machine Methods
-        public void StartUnlockingProcess()
-        {
-            if (unlockCoroutine != null)
-                StopCoroutine(unlockCoroutine);
-
-            unlockCoroutine = StartCoroutine(UnlockingProcess());
-        }
-
-        public IEnumerator UnlockingProcess()
-        {
-            controller.SetUnlockingChest(this);
-
-            while (model.RemainingUnlockTime > 0)
+            switch (stateManager.CurrentState)
             {
-                yield return new WaitForSeconds(1f);
-                model.DecrementTimer(1f);
+                case ChestState.LOCKED:
+                    unlockTimer.AttemptStartUnlocking(this);
+                    break;
+
+                case ChestState.UNLOCKING:
+                    unlockTimer.AttemptInstantUnlock();
+                    break;
+
+                case ChestState.UNLOCKED:
+                    rewardManager.CollectChest(this);
+                    stateManager.SetChestState(ChestState.COLLECTED);
+                    break;
             }
-
-            controller.ChestUnlockCompleted(this);
-            stateMachine.ChangeState(ChestState.UNLOCKED);
-        }
-
-        public void CompleteUnlocking()
-        {
-            if (unlockCoroutine != null)
-                StopCoroutine(unlockCoroutine);
-
-            model.UpdateUnlockTime(0);
-            controller.ChestUnlockCompleted(this);
-            stateMachine.ChangeState(ChestState.UNLOCKED);
-        }
-
-        public void CollectRewards()
-        {
-            int coinsAwarded = 0;
-            int gemsAwarded = 0;
-
-            controller.CollectChest(this, out coinsAwarded, out gemsAwarded);
         }
 
         public void OnReturnToPool()
         {
-            if (unlockCoroutine != null)
-                StopCoroutine(unlockCoroutine);
-
+            unlockTimer.StopUnlocking();
             chestButton.onClick.RemoveAllListeners();
-
-            // Clean up model event subscriptions
-            if (model != null)
-            {
-                model.OnStateChanged -= OnModelStateChanged;
-                model.OnUnlockTimeUpdated -= OnModelTimerUpdated;
-                model.OnGemCostUpdated -= OnModelGemCostUpdated;
-            }
         }
 
-        // Getters
-        public ChestModel GetModel() => model;
-        public ChestScriptableObject GetChestData() => model.ChestData;
-        public float GetRemainingUnlockTime() => model.RemainingUnlockTime;
-        public int GetCurrentGemCost() => model.CurrentGemCost;
+        private void OnDisable() => unlockTimer.StopUnlocking();
+
+        public void SetState(ChestState newState) => stateManager.SetChestState(newState);
+        public ChestScriptableObject GetChestData() => chestData;
     }
 }
