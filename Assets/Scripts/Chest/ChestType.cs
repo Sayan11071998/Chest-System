@@ -1,4 +1,4 @@
-namespace ChestSystem.Chest.Data
+namespace ChestSystem.Chest
 {
     public enum ChestType
     {
