@@ -1,7 +1,5 @@
 using ChestSystem.Chest.UI;
 using ChestSystem.Core;
-using ChestSystem.Events;
-using UnityEngine;
 
 namespace ChestSystem.Chest.Core
 {
@@ -10,104 +8,64 @@ namespace ChestSystem.Chest.Core
         private ChestView view;
         private ChestModel model;
         private bool isRegisteredAsUnlocking = false;
+        private ChestStateMachine stateMachine;
+
+        public ChestView View => view;
+        public ChestModel Model => model;
+        public ChestStateMachine ChestStateMachine => ChestStateMachine;
+        public ChestState CurrentState => stateMachine.GetCurrentChestState();
 
         public ChestController(ChestView view, ChestModel model)
         {
             this.view = view;
             this.model = model;
+            stateMachine = new ChestStateMachine(this);
+
+            stateMachine.ChangeState(ChestState.LOCKED);
         }
 
         public void HandleChestClicked()
         {
-            switch (model.CurrentState)
+            switch (stateMachine.GetCurrentChestState())
             {
                 case ChestState.LOCKED:
-                    AttemptStartUnlocking();
+                    (stateMachine.GetStates()[ChestState.LOCKED] as LockedState)?.HandleChestClicked();
                     break;
 
                 case ChestState.UNLOCKING:
-                    AttemptInstantUnlock();
+                    (stateMachine.GetStates()[ChestState.UNLOCKING] as UnlockingState)?.HandleChestClicked();
                     break;
 
                 case ChestState.UNLOCKED:
-                    CollectChest();
+                    (stateMachine.GetStates()[ChestState.UNLOCKED] as UnlockedState)?.HandleChestClicked();
                     break;
             }
         }
 
-        private void AttemptStartUnlocking()
+        public void SetRegisteredAsUnlocking(bool value)
         {
-            var chestService = GameService.Instance.chestService;
-
-            if (chestService.CanStartUnlocking())
-            {
-                chestService.SetUnlockingChest(view);
-                model.StartUnlocking(view, this);
-                view.SetGemCostVisible(true);
-                view.UpdateStatusText();
-                isRegisteredAsUnlocking = true;
-            }
-            else
-            {
-                Debug.Log("Another chest is already being unlocked!");
-            }
-        }
-
-        private void AttemptInstantUnlock()
-        {
-            int playerGems = GameService.Instance.playerService.PlayerController.GemsCount;
-
-            if (playerGems >= model.CurrentGemCost)
-            {
-                GameService.Instance.playerService.PlayerController.UpdateGemsCount(playerGems - model.CurrentGemCost);
-                CompleteUnlocking();
-            }
-            else
-            {
-                Debug.Log("Not enough gems to instantly unlock chest!");
-            }
-        }
-
-        private void CompleteUnlocking()
-        {
-            model.CompleteUnlocking(view, this);
-            view.SetGemCostVisible(false);
-            view.UpdateStatusText();
-            view.UpdateTimerDisplay();
+            isRegisteredAsUnlocking = value;
         }
 
         public void OnUnlockCompleted()
         {
             GameService.Instance.chestService.OnChestUnlockCompleted(view);
-            view.SetGemCostVisible(false);
             isRegisteredAsUnlocking = false;
-        }
-
-        private void CollectChest()
-        {
-            int coinsAwarded, gemsAwarded;
-            model.GetChestData().CalculateRewards(out coinsAwarded, out gemsAwarded);
-
-            var playerController = GameService.Instance.playerService.PlayerController;
-            playerController.UpdateCoinCount(playerController.CoinCount + coinsAwarded);
-            playerController.UpdateGemsCount(playerController.GemsCount + gemsAwarded);
-
-            view.SetState(ChestState.COLLECTED);
-            EventService.Instance.OnChestCollected.InvokeEvent(view, coinsAwarded, gemsAwarded);
-
-            GameService.Instance.chestService.ReplaceChestWithEmptySlot(view);
-
-            Debug.Log($"Collected chest: {view.ChestType}. Rewards: {coinsAwarded} coins, {gemsAwarded} gems");
         }
 
         public void Cleanup()
         {
             if (isRegisteredAsUnlocking && model.IsUnlocking)
             {
-                model.StopUnlocking(view);
+                model.StopUnlocking();
                 GameService.Instance.chestService.OnChestUnlockCompleted(view);
                 isRegisteredAsUnlocking = false;
             }
+        }
+
+        public void Update()
+        {
+            stateMachine.Update();
         }
     }
 }
