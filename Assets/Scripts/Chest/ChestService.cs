@@ -3,6 +3,7 @@ using ChestSystem.Chest.UI;
 using ChestSystem.Chest.Utilities;
 using ChestSystem.Events;
 using ChestSystem.UI.Components;
+using ChestSystem.UI.Core;
 using ChestSystem.UI.Pools;
 using UnityEngine;
 
@@ -99,6 +100,7 @@ namespace ChestSystem.Chest.Core
             if (activeChests.Count >= maxChestSlots)
             {
                 Debug.Log("All chest slots are full!");
+                NotificationManager.Instance.ShowNotification("CHEST SLOTS FULL", "All chest slots are currently full. Add more slots or open existing chests first.");
                 return;
             }
 
