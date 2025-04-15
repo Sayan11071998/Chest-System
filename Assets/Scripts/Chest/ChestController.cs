@@ -86,7 +86,7 @@ namespace ChestSystem.Chest.Core
         private void CollectChest()
         {
             int coinsAwarded, gemsAwarded;
-            model.CalculateRewards(out coinsAwarded, out gemsAwarded);
+            model.GetChestData().CalculateRewards(out coinsAwarded, out gemsAwarded);
 
             var playerController = GameService.Instance.playerService.PlayerController;
             playerController.UpdateCoinCount(playerController.CoinCount + coinsAwarded);

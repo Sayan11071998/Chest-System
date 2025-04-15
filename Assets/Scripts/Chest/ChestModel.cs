@@ -62,6 +62,7 @@ namespace ChestSystem.Chest.Core
         public void StartUnlocking(MonoBehaviour coroutineRunner, ChestController controller)
         {
             StopUnlocking(coroutineRunner);
+            SetState(ChestState.UNLOCKING);
             ChestView view = coroutineRunner as ChestView;
             unlockCoroutine = coroutineRunner.StartCoroutine(UnlockTimerCoroutine(view, controller));
         }
@@ -82,12 +83,6 @@ namespace ChestSystem.Chest.Core
 
             if (remainingUnlockTime > 0 && currentGemCost == 0)
                 currentGemCost = 1;
-        }
-
-        public void CalculateRewards(out int coinsAwarded, out int gemsAwarded)
-        {
-            coinsAwarded = Random.Range(chestData.minCoinReward, chestData.maxCoinReward + 1);
-            gemsAwarded = Random.Range(chestData.minGemReward, chestData.maxGemReward + 1);
         }
 
         public string FormatTime()
