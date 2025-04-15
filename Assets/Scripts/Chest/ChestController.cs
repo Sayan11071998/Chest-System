@@ -1,117 +1,116 @@
-using System.Collections.Generic;
-using ChestSystem.Chest.Data;
+using ChestSystem.Chest.UI;
+using ChestSystem.Core;
 using ChestSystem.Events;
 using UnityEngine;
-using ChestSystem.UI.Pools;
-using ChestSystem.UI.Components;
-using ChestSystem.Chest.Utilities;
-using ChestSystem.Chest.UI;
-using ChestSystem.Chest.Managers;
 
 namespace ChestSystem.Chest.Core
 {
     public class ChestController
     {
-        private List<ChestScriptableObject> chests;
-        private ChestPool chestPool;
-        private EmptySlotPool emptySlotPool;
-        private List<ChestView> activeChests = new List<ChestView>();
-        private List<EmptySlotView> activeEmptySlots = new List<EmptySlotView>();
-        private int maxChestSlots;
-        private Transform chestParent;
-        private ChestView currentlyUnlockingChest = null;
+        private ChestView view;
+        private ChestModel model;
+        private bool isRegisteredAsUnlocking = false;
 
-        private ChestSlotManager slotManager;
-        private ChestGenerator chestGenerator;
-        private ChestRewardCalculator rewardCalculator;
-
-        public List<ChestView> ActiveChests => activeChests;
-        public List<EmptySlotView> ActiveEmptySlots => activeEmptySlots;
-        public int MaxChestSlots => maxChestSlots;
-        public ChestSlotManager SlotManager => slotManager;
-
-        public ChestController(List<ChestScriptableObject> chests, ChestPool chestPool, EmptySlotPool emptySlotPool, Transform chestParent, int initialMaxChestSlots)
+        public ChestController(ChestView view, ChestModel model)
         {
-            this.chests = chests;
-            this.chestPool = chestPool;
-            this.emptySlotPool = emptySlotPool;
-            this.chestParent = chestParent;
-            this.maxChestSlots = initialMaxChestSlots;
-
-            slotManager = new ChestSlotManager(this, emptySlotPool, chestParent);
-            chestGenerator = new ChestGenerator(this, chests, chestPool);
-            rewardCalculator = new ChestRewardCalculator(chests);
-
-            slotManager.CreateInitialEmptySlots(initialMaxChestSlots);
+            this.view = view;
+            this.model = model;
         }
 
-        public void IncreaseMaxChestSlots(int amountToIncrease)
+        public void HandleChestClicked()
         {
-            maxChestSlots += amountToIncrease;
-            slotManager.AddNewEmptySlots(amountToIncrease);
-            EventService.Instance.OnMaxSlotsIncreased.InvokeEvent(maxChestSlots);
-            Debug.Log($"Max chest slots increased to {maxChestSlots}");
-        }
-
-        public void GenerateRandomChest()
-        {
-            if (activeChests.Count >= maxChestSlots)
+            switch (model.CurrentState)
             {
-                Debug.Log("All chest slots are full!");
-                return;
-            }
+                case ChestState.LOCKED:
+                    AttemptStartUnlocking();
+                    break;
 
-            chestGenerator.GenerateRandomChest();
-        }
+                case ChestState.UNLOCKING:
+                    AttemptInstantUnlock();
+                    break;
 
-        public bool CanStartUnlocking() => currentlyUnlockingChest == null;
-
-        public void SetUnlockingChest(ChestView chest)
-        {
-            currentlyUnlockingChest = chest;
-            EventService.Instance.OnChestUnlockStarted.InvokeEvent(chest);
-        }
-
-        public void ChestUnlockCompleted(ChestView chest)
-        {
-            if (currentlyUnlockingChest == chest)
-            {
-                currentlyUnlockingChest = null;
-                EventService.Instance.OnChestUnlockCompleted.InvokeEvent(chest);
+                case ChestState.UNLOCKED:
+                    CollectChest();
+                    break;
             }
         }
 
-        public void CollectChest(ChestView chest, out int coinsAwarded, out int gemsAwarded)
+        private void AttemptStartUnlocking()
         {
-            coinsAwarded = 0;
-            gemsAwarded = 0;
+            var chestService = GameService.Instance.chestService;
 
-            if (activeChests.Contains(chest))
+            if (chestService.CanStartUnlocking())
             {
-                rewardCalculator.CalculateRewards(chest, out coinsAwarded, out gemsAwarded);
-
-                if (currentlyUnlockingChest == chest)
-                    currentlyUnlockingChest = null;
-
-                EventService.Instance.OnChestCollected.InvokeEvent(chest, coinsAwarded, gemsAwarded);
-
-                slotManager.ReplaceChestWithEmptySlot(chest);
+                chestService.SetUnlockingChest(view);
+                model.StartUnlocking(view, this);
+                view.SetGemCostVisible(true);
+                view.UpdateStatusText();
+                isRegisteredAsUnlocking = true;
+            }
+            else
+            {
+                Debug.Log("Another chest is already being unlocked!");
             }
         }
 
-        public void AddChest(ChestView chest)
+        private void AttemptInstantUnlock()
         {
-            activeChests.Add(chest);
-            EventService.Instance.OnChestSpawned.InvokeEvent(chest);
+            int playerGems = GameService.Instance.playerService.PlayerController.GemsCount;
+
+            if (playerGems >= model.CurrentGemCost)
+            {
+                GameService.Instance.playerService.PlayerController.UpdateGemsCount(playerGems - model.CurrentGemCost);
+                CompleteUnlocking();
+            }
+            else
+            {
+                Debug.Log("Not enough gems to instantly unlock chest!");
+            }
         }
 
-        public void RemoveChest(ChestView chest)
+        private void CompleteUnlocking()
         {
-            activeChests.Remove(chest);
-            chestPool.ReturnChestToPool(chest);
+            model.CompleteUnlocking(view, this);
+            view.SetGemCostVisible(false);
+            view.UpdateStatusText();
+            view.UpdateTimerDisplay();
         }
 
-        public void AddEmptySlot(EmptySlotView slot) => activeEmptySlots.Add(slot);
-        public void RemoveEmptySlot(EmptySlotView slot) => activeEmptySlots.Remove(slot);
+        public void OnUnlockCompleted()
+        {
+            GameService.Instance.chestService.OnChestUnlockCompleted(view);
+            view.SetGemCostVisible(false);
+            isRegisteredAsUnlocking = false;
+        }
+
+        private void CollectChest()
+        {
+            int coinsAwarded, gemsAwarded;
+            model.CalculateRewards(out coinsAwarded, out gemsAwarded);
+
+            var playerController = GameService.Instance.playerService.PlayerController;
+            playerController.UpdateCoinCount(playerController.CoinCount + coinsAwarded);
+            playerController.UpdateGemsCount(playerController.GemsCount + gemsAwarded);
+
+            view.SetState(ChestState.COLLECTED);
+            EventService.Instance.OnChestCollected.InvokeEvent(view, coinsAwarded, gemsAwarded);
+
+            GameService.Instance.chestService.ReplaceChestWithEmptySlot(view);
+
+            Debug.Log($"Collected chest: {view.ChestType}. Rewards: {coinsAwarded} coins, {gemsAwarded} gems");
+        }
+
+        /// <summary>
+        /// Clean up resources when chest is destroyed or disabled
+        /// </summary>
+        public void Cleanup()
+        {
+            if (isRegisteredAsUnlocking && model.IsUnlocking)
+            {
+                model.StopUnlocking(view);
+                GameService.Instance.chestService.OnChestUnlockCompleted(view);
+                isRegisteredAsUnlocking = false;
+            }
+        }
     }
 }

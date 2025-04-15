@@ -21,5 +21,14 @@ namespace ChestSystem.Chest
         public int maxCoinReward;
         public int minGemReward;
         public int maxGemReward;
+
+        /// <summary>
+        /// Calculate rewards for this chest type
+        /// </summary>
+        public void CalculateRewards(out int coinsAwarded, out int gemsAwarded)
+        {
+            coinsAwarded = Random.Range(minCoinReward, maxCoinReward + 1);
+            gemsAwarded = Random.Range(minGemReward, maxGemReward + 1);
+        }
     }
 }
