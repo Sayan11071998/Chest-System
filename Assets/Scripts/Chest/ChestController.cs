@@ -7,7 +7,7 @@ using ChestSystem.UI.Components;
 using ChestSystem.Chest.UI;
 using ChestSystem.Chest.Utilities;
 
-namespace ChestSystem.Chest.Core
+namespace ChestSystem.Chest
 {
     public class ChestController
     {

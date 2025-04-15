@@ -2,7 +2,7 @@ using ChestSystem.Chest.UI;
 using ChestSystem.Utilities;
 using UnityEngine;
 
-namespace ChestSystem.Chest.Utilities
+namespace ChestSystem.Chest
 {
     public class ChestPool : GenericObjectPool<ChestView>
     {

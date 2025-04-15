@@ -6,7 +6,7 @@ using ChestSystem.Chest.Core;
 using ChestSystem.Utilities;
 using System.Collections;
 
-namespace ChestSystem.Chest.UI
+namespace ChestSystem.Chest
 {
     public class ChestView : MonoBehaviour
     {

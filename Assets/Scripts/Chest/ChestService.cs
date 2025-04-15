@@ -7,7 +7,7 @@ using ChestSystem.UI.Pools;
 using UnityEngine;
 using ChestSystem.Chest.Utilities;
 
-namespace ChestSystem.Chest.Core
+namespace ChestSystem.Chest
 {
     public class ChestService
     {
