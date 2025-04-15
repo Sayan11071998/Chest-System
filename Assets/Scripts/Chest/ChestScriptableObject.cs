@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ChestSystem.Chest.Data
+namespace ChestSystem.Chest
 {
     [CreateAssetMenu(fileName = "ChestScriptableObject", menuName = "Chest/NewChest")]
     public class ChestScriptableObject : ScriptableObject
@@ -21,5 +21,11 @@ namespace ChestSystem.Chest.Data
         public int maxCoinReward;
         public int minGemReward;
         public int maxGemReward;
+
+        public void CalculateRewards(out int coinsAwarded, out int gemsAwarded)
+        {
+            coinsAwarded = Random.Range(minCoinReward, maxCoinReward + 1);
+            gemsAwarded = Random.Range(minGemReward, maxGemReward + 1);
+        }
     }
 }

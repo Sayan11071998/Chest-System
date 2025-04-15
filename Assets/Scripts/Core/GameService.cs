@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using ChestSystem.Chest.Core;
-using ChestSystem.Chest.Data;
+using ChestSystem.Chest;
 using ChestSystem.Chest.UI;
 using ChestSystem.Player.Core;
 using ChestSystem.Player.Data;

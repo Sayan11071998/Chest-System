@@ -1,0 +1,120 @@
+using System.Collections;
+using ChestSystem.Chest.UI;
+using UnityEngine;
+
+namespace ChestSystem.Chest.Core
+{
+    public class ChestModel
+    {
+        private ChestScriptableObject chestData;
+        private ChestState currentState = ChestState.LOCKED;
+        private float remainingUnlockTime;
+        private int currentGemCost;
+        private Coroutine unlockCoroutine;
+
+        private const float MINUTES_PER_GEM = 10f;
+
+        public ChestType ChestType => chestData?.chestType ?? ChestType.COMMON;
+        public ChestState CurrentState => currentState;
+        public float RemainingUnlockTime => remainingUnlockTime;
+        public int CurrentGemCost => currentGemCost;
+        public bool IsUnlocking => unlockCoroutine != null;
+
+        public void Initialize(ChestScriptableObject chestData)
+        {
+            this.chestData = chestData;
+            this.remainingUnlockTime = chestData.unlockTimeInSeconds;
+            this.currentState = ChestState.LOCKED;
+            UpdateGemCost();
+        }
+
+        public void SetState(ChestState newState)
+        {
+            currentState = newState;
+        }
+
+        public IEnumerator UnlockTimerCoroutine(ChestView view, ChestController controller)
+        {
+            SetState(ChestState.UNLOCKING);
+
+            while (remainingUnlockTime > 0)
+            {
+                yield return new WaitForSeconds(1f);
+                remainingUnlockTime -= 1f;
+                UpdateGemCost();
+
+                view.UpdateTimeAndCost();
+            }
+
+            remainingUnlockTime = 0;
+            SetState(ChestState.UNLOCKED);
+            controller.OnUnlockCompleted();
+        }
+
+        public void StopUnlocking(MonoBehaviour coroutineRunner)
+        {
+            if (unlockCoroutine != null)
+                coroutineRunner.StopCoroutine(unlockCoroutine);
+
+            unlockCoroutine = null;
+        }
+
+        public void StartUnlocking(MonoBehaviour coroutineRunner, ChestController controller)
+        {
+            StopUnlocking(coroutineRunner);
+            ChestView view = coroutineRunner as ChestView;
+            unlockCoroutine = coroutineRunner.StartCoroutine(UnlockTimerCoroutine(view, controller));
+        }
+
+        public void CompleteUnlocking(MonoBehaviour coroutineRunner, ChestController controller)
+        {
+            StopUnlocking(coroutineRunner);
+            remainingUnlockTime = 0;
+            SetState(ChestState.UNLOCKED);
+            UpdateGemCost();
+            controller.OnUnlockCompleted();
+        }
+
+        private void UpdateGemCost()
+        {
+            float minutesRemaining = remainingUnlockTime / 60f;
+            currentGemCost = Mathf.CeilToInt(minutesRemaining / MINUTES_PER_GEM);
+
+            if (remainingUnlockTime > 0 && currentGemCost == 0)
+                currentGemCost = 1;
+        }
+
+        public void CalculateRewards(out int coinsAwarded, out int gemsAwarded)
+        {
+            coinsAwarded = Random.Range(chestData.minCoinReward, chestData.maxCoinReward + 1);
+            gemsAwarded = Random.Range(chestData.minGemReward, chestData.maxGemReward + 1);
+        }
+
+        public string FormatTime()
+        {
+            float timeInSeconds = remainingUnlockTime;
+
+            if (timeInSeconds <= 0)
+                return "Ready!";
+
+            if (timeInSeconds < 60)
+            {
+                return string.Format("{0} sec", Mathf.CeilToInt(timeInSeconds));
+            }
+            else if (timeInSeconds < 3600)
+            {
+                int minutes = Mathf.FloorToInt(timeInSeconds / 60);
+                int seconds = Mathf.FloorToInt(timeInSeconds % 60);
+                return string.Format("{0}m {1}s", minutes, seconds);
+            }
+            else
+            {
+                int hours = Mathf.FloorToInt(timeInSeconds / 3600);
+                int minutes = Mathf.FloorToInt((timeInSeconds % 3600) / 60);
+                return string.Format("{0}h {1}m", hours, minutes);
+            }
+        }
+
+        public ChestScriptableObject GetChestData() => chestData;
+    }
+}
