@@ -12,7 +12,7 @@ namespace ChestSystem.Chest.Core
 
         public ChestView View => view;
         public ChestModel Model => model;
-        public ChestStateMachine ChestStateMachine => ChestStateMachine;
+        public ChestStateMachine ChestStateMachine => stateMachine;
         public ChestState CurrentState => stateMachine.GetCurrentChestState();
 
         public ChestController(ChestView view, ChestModel model)
