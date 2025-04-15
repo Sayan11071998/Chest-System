@@ -29,10 +29,7 @@ namespace ChestSystem.Chest
 
         public void Update() { }
 
-        public void HandleChestClicked()
-        {
-            CollectChest();
-        }
+        public void HandleChestClicked() => CollectChest();
 
         private void CollectChest()
         {
@@ -44,9 +41,7 @@ namespace ChestSystem.Chest
             playerController.UpdateGemsCount(playerController.GemsCount + gemsAwarded);
 
             EventService.Instance.OnChestCollected.InvokeEvent(chestController.View, coinsAwarded, gemsAwarded);
-
             GameService.Instance.chestService.ReplaceChestWithEmptySlot(chestController.View);
-
             Debug.Log($"Collected chest: {chestController.View.ChestType}. Rewards: {coinsAwarded} coins, {gemsAwarded} gems");
 
             stateMachine.ChangeState(ChestState.COLLECTED);

@@ -24,15 +24,9 @@ namespace ChestSystem.Chest.Core
             stateMachine.ChangeState(ChestState.LOCKED);
         }
 
-        public void HandleChestClicked()
-        {
-            stateMachine.GetCurrentState()?.HandleChestClicked();
-        }
+        public void HandleChestClicked() => stateMachine.GetCurrentState()?.HandleChestClicked();
 
-        public void SetRegisteredAsUnlocking(bool value)
-        {
-            isRegisteredAsUnlocking = value;
-        }
+        public void SetRegisteredAsUnlocking(bool value) => isRegisteredAsUnlocking = value;
 
         public void OnUnlockCompleted()
         {
@@ -50,9 +44,6 @@ namespace ChestSystem.Chest.Core
             }
         }
 
-        public void Update()
-        {
-            stateMachine.Update();
-        }
+        public void Update() => stateMachine.Update();
     }
 }

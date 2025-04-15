@@ -27,10 +27,7 @@ namespace ChestSystem.Chest.UI
             controller = new ChestController(this, model);
         }
 
-        private void Update()
-        {
-            controller.Update();
-        }
+        private void Update() => controller.Update();
 
         public void Initialize(ChestScriptableObject chestData)
         {

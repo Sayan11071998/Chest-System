@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2ebd0cd139eec5d4aaa2e35fc36e0e4e
+guid: d4337c3aa1b6970488515d9b5d83dc39
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1027108492855739919
-    second: Legendary Chest Closed_0
+      213: -1213492459386570257
+    second: Legendary Chest Open_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Legendary Chest Closed_0
+      name: Legendary Chest Open_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f06047e7bb5014e00800000000000000
-      internalID: 1027108492855739919
+      spriteID: fe9f5ac990fc82fe0800000000000000
+      internalID: -1213492459386570257
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Legendary Chest Closed_0: 1027108492855739919
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
