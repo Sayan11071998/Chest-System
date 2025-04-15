@@ -6,9 +6,9 @@ namespace ChestSystem.Chest.States
 {
     public class LockedState : IState
     {
+        private ChestStateMachine stateMachine;
         protected ChestView chestView;
-        protected ChestStateMachine stateMachine;
-
+    
         public LockedState(ChestView chestView, ChestStateMachine stateMachine)
         {
             this.chestView = chestView;

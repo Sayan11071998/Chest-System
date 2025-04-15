@@ -2,8 +2,8 @@ namespace ChestSystem.Utilities
 {
     public interface IState
     {
-        void OnStateEnter();
-        void Update();
-        void OnStateExit();
+        public void OnStateEnter();
+        public void Update();
+        public void OnStateExit();
     }
 }

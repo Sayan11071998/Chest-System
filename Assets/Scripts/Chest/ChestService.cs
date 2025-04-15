@@ -5,12 +5,16 @@ using ChestSystem.Chest.Core;
 using ChestSystem.UI.Components;
 using ChestSystem.UI.Pools;
 using UnityEngine;
+using ChestSystem.Chest.Utilities;
 
 namespace ChestSystem.Chest.Core
 {
     public class ChestService
     {
+        // Direct reference to controller for better encapsulation
         private ChestController controller;
+
+        public ChestController chestController => controller;
 
         public ChestService(List<ChestScriptableObject> chests, ChestView chestPrefab,
                            EmptySlotView emptySlotPrefab, Transform chestParent, int initialMaxChestSlots)

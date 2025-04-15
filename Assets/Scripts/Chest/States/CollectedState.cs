@@ -23,7 +23,24 @@ namespace ChestSystem.Chest.States
             chestView.HideGemCost();
 
             // Collect the rewards
-            chestView.CollectRewards();
+            CollectRewards();
+        }
+
+        private void CollectRewards()
+        {
+            // Get the controller from state machine
+            ChestController controller = stateMachine.GetController();
+            if (controller == null) return;
+            
+            int coinsAwarded, gemsAwarded;
+            controller.CollectChest(chestView, out coinsAwarded, out gemsAwarded);
+            
+            // Update player resources
+            var playerController = GameService.Instance.playerService.PlayerController;
+            playerController.UpdateCoinCount(playerController.CoinCount + coinsAwarded);
+            playerController.UpdateGemsCount(playerController.GemsCount + gemsAwarded);
+            
+            Debug.Log($"Collected chest: {chestView.ChestType}. Rewards: {coinsAwarded} coins, {gemsAwarded} gems");
         }
 
         public virtual void Update()
