@@ -19,7 +19,6 @@ namespace ChestSystem.Chest.Core
         private Transform chestParent;
         private ChestView currentlyUnlockingChest = null;
 
-        // Properties
         public List<ChestView> ActiveChests => activeChests;
         public List<EmptySlotView> ActiveEmptySlots => activeEmptySlots;
         public int MaxChestSlots => maxChestSlots;
@@ -37,29 +36,18 @@ namespace ChestSystem.Chest.Core
             CreateInitialEmptySlots(initialMaxChestSlots);
         }
 
-        #region Chest Slot Management
-
-        /// <summary>
-        /// Create initial empty slots
-        /// </summary>
         private void CreateInitialEmptySlots(int amount)
         {
             for (int i = 0; i < amount; i++)
                 CreateEmptySlot();
         }
 
-        /// <summary>
-        /// Add new empty slots
-        /// </summary>
         private void AddNewEmptySlots(int amount)
         {
             for (int i = 0; i < amount; i++)
                 CreateEmptySlot();
         }
 
-        /// <summary>
-        /// Create a single empty slot
-        /// </summary>
         private void CreateEmptySlot()
         {
             EmptySlotView emptySlot = emptySlotPool.GetEmptySlot();
@@ -73,9 +61,6 @@ namespace ChestSystem.Chest.Core
             Debug.Log($"Created empty slot. Total slots: {ActiveEmptySlots.Count}");
         }
 
-        /// <summary>
-        /// Replace a chest with an empty slot
-        /// </summary>
         public void ReplaceChestWithEmptySlot(ChestView chest)
         {
             int siblingIndex = chest.transform.GetSiblingIndex();
@@ -88,9 +73,6 @@ namespace ChestSystem.Chest.Core
             AddEmptySlot(emptySlot);
         }
 
-        /// <summary>
-        /// Get and remove an empty slot
-        /// </summary>
         private bool GetAndRemoveEmptySlot(out int siblingIndex)
         {
             siblingIndex = -1;
@@ -104,13 +86,6 @@ namespace ChestSystem.Chest.Core
             return true;
         }
 
-        #endregion
-
-        #region Chest System Functions
-
-        /// <summary>
-        /// Increase the maximum number of chest slots
-        /// </summary>
         public void IncreaseMaxChestSlots(int amountToIncrease)
         {
             maxChestSlots += amountToIncrease;
@@ -119,9 +94,6 @@ namespace ChestSystem.Chest.Core
             Debug.Log($"Max chest slots increased to {maxChestSlots}");
         }
 
-        /// <summary>
-        /// Generate a random chest if there are empty slots
-        /// </summary>
         public void GenerateRandomChest()
         {
             if (activeChests.Count >= maxChestSlots)
@@ -132,12 +104,10 @@ namespace ChestSystem.Chest.Core
 
             if (chests == null || chests.Count == 0) return;
 
-            // Calculate total generation chance
             int totalChestGenerationChance = 0;
             foreach (var chestItem in chests)
                 totalChestGenerationChance += chestItem.chestGenerationChance;
 
-            // Choose a random chest based on weighted probability
             int randomValue = Random.Range(0, totalChestGenerationChance);
             foreach (var chestItem in chests)
             {
@@ -150,9 +120,6 @@ namespace ChestSystem.Chest.Core
             }
         }
 
-        /// <summary>
-        /// Spawn a specific chest
-        /// </summary>
         private void SpawnChest(ChestScriptableObject chestData)
         {
             int siblingIndex;
@@ -173,24 +140,14 @@ namespace ChestSystem.Chest.Core
                 Debug.LogWarning("No empty slots available!");
             }
         }
-
-        /// <summary>
-        /// Check if a chest can start unlocking
-        /// </summary>
         public bool CanStartUnlocking() => currentlyUnlockingChest == null;
 
-        /// <summary>
-        /// Set the chest that is currently being unlocked
-        /// </summary>
         public void SetUnlockingChest(ChestView chest)
         {
             currentlyUnlockingChest = chest;
             EventService.Instance.OnChestUnlockStarted.InvokeEvent(chest);
         }
 
-        /// <summary>
-        /// Called when a chest has finished unlocking
-        /// </summary>
         public void OnChestUnlockCompleted(ChestView chest)
         {
             if (currentlyUnlockingChest == chest)
@@ -200,34 +157,19 @@ namespace ChestSystem.Chest.Core
             }
         }
 
-        /// <summary>
-        /// Add a chest to the active chests list
-        /// </summary>
         public void AddChest(ChestView chest)
         {
             activeChests.Add(chest);
             EventService.Instance.OnChestSpawned.InvokeEvent(chest);
         }
 
-        /// <summary>
-        /// Remove a chest from the active chests list
-        /// </summary>
         public void RemoveChest(ChestView chest)
         {
             activeChests.Remove(chest);
             chestPool.ReturnChestToPool(chest);
         }
 
-        /// <summary>
-        /// Add an empty slot to the active empty slots list
-        /// </summary>
         public void AddEmptySlot(EmptySlotView slot) => activeEmptySlots.Add(slot);
-
-        /// <summary>
-        /// Remove an empty slot from the active empty slots list
-        /// </summary>
         public void RemoveEmptySlot(EmptySlotView slot) => activeEmptySlots.Remove(slot);
-
-        #endregion
     }
 }

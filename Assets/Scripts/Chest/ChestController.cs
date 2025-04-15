@@ -100,9 +100,6 @@ namespace ChestSystem.Chest.Core
             Debug.Log($"Collected chest: {view.ChestType}. Rewards: {coinsAwarded} coins, {gemsAwarded} gems");
         }
 
-        /// <summary>
-        /// Clean up resources when chest is destroyed or disabled
-        /// </summary>
         public void Cleanup()
         {
             if (isRegisteredAsUnlocking && model.IsUnlocking)

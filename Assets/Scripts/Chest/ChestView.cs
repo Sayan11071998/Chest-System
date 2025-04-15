@@ -5,10 +5,6 @@ using ChestSystem.Chest.Core;
 
 namespace ChestSystem.Chest.UI
 {
-    /// <summary>
-    /// View component of the Chest MVC pattern.
-    /// Handles the visual representation of the chest.
-    /// </summary>
     public class ChestView : MonoBehaviour
     {
         [SerializeField] private Image chestImage;
@@ -30,17 +26,12 @@ namespace ChestSystem.Chest.UI
             controller = new ChestController(this, model);
         }
 
-        /// <summary>
-        /// Initialize the chest with data
-        /// </summary>
         public void Initialize(ChestScriptableObject chestData)
         {
             this.name = chestData.chestType.ToString();
 
-            // Initialize model
             model.Initialize(chestData);
 
-            // Initialize UI elements
             if (chestImage != null && chestData.chestSprite != null)
                 chestImage.sprite = chestData.chestSprite;
 
@@ -51,22 +42,15 @@ namespace ChestSystem.Chest.UI
             UpdateTimerDisplay();
             UpdateGemCostText();
 
-            // Add listener
             chestButton.onClick.AddListener(OnChestClicked);
         }
 
-        /// <summary>
-        /// Handle chest click based on current state
-        /// </summary>
         private void OnChestClicked()
         {
             Debug.Log($"Chest clicked: {ChestType}");
             controller.HandleChestClicked();
         }
 
-        /// <summary>
-        /// Update the status text based on model state
-        /// </summary>
         public void UpdateStatusText()
         {
             if (statusText != null)
@@ -95,59 +79,38 @@ namespace ChestSystem.Chest.UI
             UpdateGemCostText();
         }
 
-        /// <summary>
-        /// Update the timer display
-        /// </summary>
         public void UpdateTimerDisplay()
         {
             if (timerText != null)
                 timerText.text = model.FormatTime();
         }
 
-        /// <summary>
-        /// Update the gem cost text
-        /// </summary>
         public void UpdateGemCostText()
         {
             if (gemCostText != null)
                 gemCostText.text = $"Cost: {model.CurrentGemCost}";
         }
 
-        /// <summary>
-        /// Show or hide the gem cost container
-        /// </summary>
         public void SetGemCostVisible(bool visible)
         {
             if (gemCostContainer != null)
                 gemCostContainer.SetActive(visible);
         }
 
-        /// <summary>
-        /// Clean up when returned to pool
-        /// </summary>
         public void OnReturnToPool()
         {
             controller.Cleanup();
             chestButton.onClick.RemoveAllListeners();
         }
 
-        private void OnDisable()
-        {
-            controller.Cleanup();
-        }
+        private void OnDisable() => controller.Cleanup();
 
-        /// <summary>
-        /// Update the chest state
-        /// </summary>
         public void SetState(ChestState newState)
         {
             model.SetState(newState);
             UpdateStatusText();
         }
 
-        /// <summary>
-        /// Get the chest data
-        /// </summary>
         public ChestScriptableObject GetChestData() => model.GetChestData();
     }
 }
