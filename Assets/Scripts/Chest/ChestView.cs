@@ -17,8 +17,9 @@ namespace ChestSystem.Chest.UI
         private ChestController controller;
         private ChestModel model;
 
+        public ChestController Controller => controller;
         public ChestType ChestType => model?.ChestType ?? ChestType.COMMON;
-        public ChestState CurrentState => model?.CurrentState ?? ChestState.LOCKED;
+        public ChestState CurrentState => controller?.CurrentState ?? ChestState.LOCKED;
 
         private void Awake()
         {
@@ -26,11 +27,16 @@ namespace ChestSystem.Chest.UI
             controller = new ChestController(this, model);
         }
 
+        private void Update()
+        {
+            controller.Update();
+        }
+
         public void Initialize(ChestScriptableObject chestData)
         {
             this.name = chestData.chestType.ToString();
 
-            model.Initialize(chestData);
+            model.Initialize(chestData, this);
 
             if (chestImage != null && chestData.chestSprite != null)
                 chestImage.sprite = chestData.chestSprite;
@@ -51,24 +57,31 @@ namespace ChestSystem.Chest.UI
             controller.HandleChestClicked();
         }
 
-        public void UpdateStatusText()
+        public void UpdateStatusText(string text = null)
         {
             if (statusText != null)
             {
-                switch (model.CurrentState)
+                if (text != null)
                 {
-                    case ChestState.LOCKED:
-                        statusText.text = "LOCKED";
-                        break;
-                    case ChestState.UNLOCKING:
-                        statusText.text = "UNLOCKING";
-                        break;
-                    case ChestState.UNLOCKED:
-                        statusText.text = "UNLOCKED";
-                        break;
-                    case ChestState.COLLECTED:
-                        statusText.text = "COLLECTED";
-                        break;
+                    statusText.text = text;
+                }
+                else
+                {
+                    switch (controller.CurrentState)
+                    {
+                        case ChestState.LOCKED:
+                            statusText.text = "LOCKED";
+                            break;
+                        case ChestState.UNLOCKING:
+                            statusText.text = "UNLOCKING";
+                            break;
+                        case ChestState.UNLOCKED:
+                            statusText.text = "UNLOCKED";
+                            break;
+                        case ChestState.COLLECTED:
+                            statusText.text = "COLLECTED";
+                            break;
+                    }
                 }
             }
         }
@@ -104,12 +117,6 @@ namespace ChestSystem.Chest.UI
         }
 
         private void OnDisable() => controller.Cleanup();
-
-        public void SetState(ChestState newState)
-        {
-            model.SetState(newState);
-            UpdateStatusText();
-        }
 
         public ChestScriptableObject GetChestData() => model.GetChestData();
     }

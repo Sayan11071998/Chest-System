@@ -7,36 +7,28 @@ namespace ChestSystem.Chest.Core
     public class ChestModel
     {
         private ChestScriptableObject chestData;
-        private ChestState currentState = ChestState.LOCKED;
         private float remainingUnlockTime;
         private int currentGemCost;
         private Coroutine unlockCoroutine;
+        private ChestView view;
 
         private const float MINUTES_PER_GEM = 10f;
 
         public ChestType ChestType => chestData?.chestType ?? ChestType.COMMON;
-        public ChestState CurrentState => currentState;
         public float RemainingUnlockTime => remainingUnlockTime;
         public int CurrentGemCost => currentGemCost;
         public bool IsUnlocking => unlockCoroutine != null;
 
-        public void Initialize(ChestScriptableObject chestData)
+        public void Initialize(ChestScriptableObject chestData, ChestView view)
         {
             this.chestData = chestData;
             this.remainingUnlockTime = chestData.unlockTimeInSeconds;
-            this.currentState = ChestState.LOCKED;
+            this.view = view;
             UpdateGemCost();
         }
 
-        public void SetState(ChestState newState)
+        public IEnumerator UnlockTimerCoroutine()
         {
-            currentState = newState;
-        }
-
-        public IEnumerator UnlockTimerCoroutine(ChestView view, ChestController controller)
-        {
-            SetState(ChestState.UNLOCKING);
-
             while (remainingUnlockTime > 0)
             {
                 yield return new WaitForSeconds(1f);
@@ -47,33 +39,31 @@ namespace ChestSystem.Chest.Core
             }
 
             remainingUnlockTime = 0;
-            SetState(ChestState.UNLOCKED);
-            controller.OnUnlockCompleted();
+
+            // Notify the state machine via the view to transition to UNLOCKED state
+            UnlockingState unlockingState = view.Controller.ChestStateMachine.GetStates()[ChestState.UNLOCKING] as UnlockingState;
+            unlockingState?.OnUnlockTimerComplete();
         }
 
-        public void StopUnlocking(MonoBehaviour coroutineRunner)
+        public void StopUnlocking()
         {
             if (unlockCoroutine != null)
-                coroutineRunner.StopCoroutine(unlockCoroutine);
+                view.StopCoroutine(unlockCoroutine);
 
             unlockCoroutine = null;
         }
 
-        public void StartUnlocking(MonoBehaviour coroutineRunner, ChestController controller)
+        public void StartUnlocking()
         {
-            StopUnlocking(coroutineRunner);
-            SetState(ChestState.UNLOCKING);
-            ChestView view = coroutineRunner as ChestView;
-            unlockCoroutine = coroutineRunner.StartCoroutine(UnlockTimerCoroutine(view, controller));
+            StopUnlocking();
+            unlockCoroutine = view.StartCoroutine(UnlockTimerCoroutine());
         }
 
-        public void CompleteUnlocking(MonoBehaviour coroutineRunner, ChestController controller)
+        public void CompleteUnlocking()
         {
-            StopUnlocking(coroutineRunner);
+            StopUnlocking();
             remainingUnlockTime = 0;
-            SetState(ChestState.UNLOCKED);
             UpdateGemCost();
-            controller.OnUnlockCompleted();
         }
 
         private void UpdateGemCost()
