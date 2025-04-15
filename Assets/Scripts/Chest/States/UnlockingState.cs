@@ -22,10 +22,7 @@ namespace ChestSystem.Chest
             chestController.View.SetGemCostVisible(true);
         }
 
-        public void OnStateExit()
-        {
-            chestController.View.SetGemCostVisible(false);
-        }
+        public void OnStateExit() => chestController.View.SetGemCostVisible(false);
 
         public void Update()
         {
@@ -33,10 +30,7 @@ namespace ChestSystem.Chest
             // but we can use Update() for any continuous state-specific behaviors
         }
 
-        public void HandleChestClicked()
-        {
-            AttemptInstantUnlock();
-        }
+        public void HandleChestClicked() => AttemptInstantUnlock();
 
         private void AttemptInstantUnlock()
         {
@@ -59,9 +53,6 @@ namespace ChestSystem.Chest
             stateMachine.ChangeState(ChestState.UNLOCKED);
         }
 
-        public void OnUnlockTimerComplete()
-        {
-            stateMachine.ChangeState(ChestState.UNLOCKED);
-        }
+        public void OnUnlockTimerComplete() => stateMachine.ChangeState(ChestState.UNLOCKED);
     }
 }

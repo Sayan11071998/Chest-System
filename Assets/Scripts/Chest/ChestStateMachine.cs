@@ -48,9 +48,7 @@ namespace ChestSystem.Chest
         public void Update() => currentState?.Update();
 
         public IState GetCurrentState() => currentState;
-
         public ChestState GetCurrentChestState() => currentChestStateEnum;
-
         public Dictionary<ChestState, IState> GetStates() => states;
     }
 }

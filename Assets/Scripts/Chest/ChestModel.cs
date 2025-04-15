@@ -24,7 +24,17 @@ namespace ChestSystem.Chest.Core
             this.chestData = chestData;
             this.remainingUnlockTime = chestData.unlockTimeInSeconds;
             this.view = view;
+
             UpdateGemCost();
+        }
+
+        private void UpdateGemCost()
+        {
+            float minutesRemaining = remainingUnlockTime / 60f;
+            currentGemCost = Mathf.CeilToInt(minutesRemaining / MINUTES_PER_GEM);
+
+            if (remainingUnlockTime > 0 && currentGemCost == 0)
+                currentGemCost = 1;
         }
 
         public IEnumerator UnlockTimerCoroutine()
@@ -63,15 +73,6 @@ namespace ChestSystem.Chest.Core
             StopUnlocking();
             remainingUnlockTime = 0;
             UpdateGemCost();
-        }
-
-        private void UpdateGemCost()
-        {
-            float minutesRemaining = remainingUnlockTime / 60f;
-            currentGemCost = Mathf.CeilToInt(minutesRemaining / MINUTES_PER_GEM);
-
-            if (remainingUnlockTime > 0 && currentGemCost == 0)
-                currentGemCost = 1;
         }
 
         public string FormatTime()
