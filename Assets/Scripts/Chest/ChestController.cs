@@ -30,7 +30,9 @@ namespace ChestSystem.Chest.Core
 
         public void OnUnlockCompleted()
         {
-            GameService.Instance.chestService.OnChestUnlockCompleted(view);
+            if (GameService.Instance != null && GameService.Instance.chestService != null)
+                GameService.Instance.chestService.OnChestUnlockCompleted(view);
+
             isRegisteredAsUnlocking = false;
         }
 
@@ -39,7 +41,10 @@ namespace ChestSystem.Chest.Core
             if (isRegisteredAsUnlocking && model.IsUnlocking)
             {
                 model.StopUnlocking();
-                GameService.Instance.chestService.OnChestUnlockCompleted(view);
+
+                if (GameService.Instance != null && GameService.Instance.chestService != null)
+                    GameService.Instance.chestService.OnChestUnlockCompleted(view);
+
                 isRegisteredAsUnlocking = false;
             }
         }
