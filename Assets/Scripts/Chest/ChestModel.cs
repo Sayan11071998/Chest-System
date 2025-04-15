@@ -40,7 +40,6 @@ namespace ChestSystem.Chest.Core
 
             remainingUnlockTime = 0;
 
-            // Notify the state machine via the view to transition to UNLOCKED state
             UnlockingState unlockingState = view.Controller.ChestStateMachine.GetStates()[ChestState.UNLOCKING] as UnlockingState;
             unlockingState?.OnUnlockTimerComplete();
         }

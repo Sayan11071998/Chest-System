@@ -1,7 +1,5 @@
 using ChestSystem.Chest.UI;
 using ChestSystem.Core;
-using ChestSystem.Events;
-using UnityEngine;
 
 namespace ChestSystem.Chest.Core
 {
@@ -23,7 +21,6 @@ namespace ChestSystem.Chest.Core
             this.model = model;
             stateMachine = new ChestStateMachine(this);
 
-            // Initialize with locked state
             stateMachine.ChangeState(ChestState.LOCKED);
         }
 

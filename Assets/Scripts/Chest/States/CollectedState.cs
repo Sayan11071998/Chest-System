@@ -23,9 +23,6 @@ namespace ChestSystem.Chest.States
 
         public void Update() { }
 
-        public void HandleChestClicked()
-        {
-            // Do nothing, chest is already collected
-        }
+        public void HandleChestClicked() { }
     }
 }
