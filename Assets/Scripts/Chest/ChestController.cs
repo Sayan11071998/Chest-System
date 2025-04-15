@@ -26,20 +26,7 @@ namespace ChestSystem.Chest.Core
 
         public void HandleChestClicked()
         {
-            switch (stateMachine.GetCurrentChestState())
-            {
-                case ChestState.LOCKED:
-                    (stateMachine.GetStates()[ChestState.LOCKED] as LockedState)?.HandleChestClicked();
-                    break;
-
-                case ChestState.UNLOCKING:
-                    (stateMachine.GetStates()[ChestState.UNLOCKING] as UnlockingState)?.HandleChestClicked();
-                    break;
-
-                case ChestState.UNLOCKED:
-                    (stateMachine.GetStates()[ChestState.UNLOCKED] as UnlockedState)?.HandleChestClicked();
-                    break;
-            }
+            stateMachine.GetCurrentState()?.HandleChestClicked();
         }
 
         public void SetRegisteredAsUnlocking(bool value)
