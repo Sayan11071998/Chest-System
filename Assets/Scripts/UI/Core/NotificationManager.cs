@@ -9,7 +9,13 @@ namespace ChestSystem.UI.Core
         [SerializeField] private NotificationPanel notificationPanelPrefab;
         private NotificationPanel activePanel;
 
-        private void Start()
+        protected override void Awake()
+        {
+            base.Awake();
+            InitializeNotificationPanel();
+        }
+
+        private void InitializeNotificationPanel()
         {
             if (notificationPanelPrefab != null)
             {
@@ -26,7 +32,7 @@ namespace ChestSystem.UI.Core
         {
             if (activePanel == null)
             {
-                Debug.LogError("No notification panel available!");
+                Debug.LogError("No notification panel available! Make sure the NotificationManager has a valid notificationPanelPrefab assigned.");
                 return;
             }
 
