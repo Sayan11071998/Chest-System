@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2599793957919939235}
   - component: {fileID: 5826845049378119726}
   - component: {fileID: 6298664670729326889}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: NotificationPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,6 +125,30 @@ MonoBehaviour:
   closeButton: {fileID: 6673816163289300458}
   fadeInDuration: 0.3
   fadeOutDuration: 0.2
+  animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &5181502434995709529
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,7 +160,7 @@ GameObject:
   - component: {fileID: 2724064894455519976}
   - component: {fileID: 4568533429100762665}
   - component: {fileID: 1269582560485235485}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Close Button Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -272,7 +296,7 @@ GameObject:
   - component: {fileID: 8065545056355127347}
   - component: {fileID: 5926880713899026021}
   - component: {fileID: 7023001034092234542}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Notification Title Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -409,7 +433,7 @@ GameObject:
   - component: {fileID: 1946811724506750822}
   - component: {fileID: 2940922657968058854}
   - component: {fileID: 6673816163289300458}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Close Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -529,7 +553,7 @@ GameObject:
   - component: {fileID: 6560010052318791578}
   - component: {fileID: 2097910133688203151}
   - component: {fileID: 6053421800781612739}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Message Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
