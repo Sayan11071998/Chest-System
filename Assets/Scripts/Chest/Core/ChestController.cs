@@ -7,33 +7,33 @@ namespace ChestSystem.Chest.Core
 {
     public class ChestController
     {
-        private ChestView view;
-        private ChestModel model;
+        private ChestView chestView;
+        private ChestModel chestModel;
         private bool isRegisteredAsUnlocking = false;
-        private ChestStateMachine stateMachine;
+        private ChestStateMachine chestStateMachine;
 
-        public ChestView View => view;
-        public ChestModel Model => model;
-        public ChestStateMachine ChestStateMachine => stateMachine;
-        public ChestState CurrentState => stateMachine.GetCurrentChestState();
+        public ChestView ChestView => chestView;
+        public ChestModel ChestModel => chestModel;
+        public ChestStateMachine ChestStateMachine => chestStateMachine;
+        public ChestState CurrentState => chestStateMachine.GetCurrentChestState();
 
         public ChestController(ChestView view, ChestModel model)
         {
-            this.view = view;
-            this.model = model;
-            stateMachine = new ChestStateMachine(this);
+            chestView = view;
+            chestModel = model;
 
-            stateMachine.ChangeState(ChestState.LOCKED);
+            chestStateMachine = new ChestStateMachine(this);
+            chestStateMachine.ChangeState(ChestState.LOCKED);
         }
 
-        public void HandleChestClicked() => stateMachine.GetCurrentState()?.HandleChestClicked();
+        public void HandleChestClicked() => chestStateMachine.GetCurrentState()?.HandleChestClicked();
 
         public void SetRegisteredAsUnlocking(bool value) => isRegisteredAsUnlocking = value;
 
         public void OnUnlockCompleted()
         {
             if (GameService.Instance != null && GameService.Instance.chestService != null)
-                GameService.Instance.chestService.OnChestUnlockCompleted(view);
+                GameService.Instance.chestService.OnChestUnlockCompleted(chestView);
 
             isRegisteredAsUnlocking = false;
         }
@@ -43,12 +43,12 @@ namespace ChestSystem.Chest.Core
             if (isRegisteredAsUnlocking)
             {
                 if (GameService.Instance != null && GameService.Instance.chestService != null)
-                    GameService.Instance.chestService.OnChestUnlockCompleted(view);
+                    GameService.Instance.chestService.OnChestUnlockCompleted(chestView);
 
                 isRegisteredAsUnlocking = false;
             }
         }
 
-        public void Update() => stateMachine.Update();
+        public void Update() => chestStateMachine.Update();
     }
 }

@@ -15,7 +15,7 @@ namespace ChestSystem.Chest.States
             this.stateMachine = stateMachine;
         }
 
-        public void OnStateEnter() => chestController.View.UpdateStatusText("COLLECTED");
+        public void OnStateEnter() => chestController.ChestView.UpdateStatusText("COLLECTED");
 
         public void OnStateExit() { }
 

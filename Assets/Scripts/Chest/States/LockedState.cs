@@ -20,8 +20,8 @@ namespace ChestSystem.Chest.States
 
         public void OnStateEnter()
         {
-            chestController.View.SetGemCostVisible(false);
-            chestController.View.UpdateStatusText("LOCKED");
+            chestController.ChestView.SetGemCostVisible(false);
+            chestController.ChestView.UpdateStatusText("LOCKED");
         }
 
         public void OnStateExit() { }
@@ -34,9 +34,9 @@ namespace ChestSystem.Chest.States
 
             if (chestService.CanStartUnlocking())
             {
-                chestService.SetUnlockingChest(chestController.View);
-                chestController.View.SetGemCostVisible(true);
-                chestController.View.UpdateStatusText("UNLOCKING");
+                chestService.SetUnlockingChest(chestController.ChestView);
+                chestController.ChestView.SetGemCostVisible(true);
+                chestController.ChestView.UpdateStatusText("UNLOCKING");
                 chestController.SetRegisteredAsUnlocking(true);
 
                 stateMachine.ChangeState(ChestState.UNLOCKING);
