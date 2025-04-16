@@ -89,6 +89,3 @@ What challenging game systems have *you* built recently? I’d love to hear your
 > Drop a ⭐ if you find this project interesting or useful, and feel free to fork it or open a PR with improvements or cool additions!
 
 ---
-
-### Tags
-`#GameDevelopment` `#Unity3D` `#CSharp` `#MobileGames` `#SoftwareArchitecture` `#DesignPatterns`
