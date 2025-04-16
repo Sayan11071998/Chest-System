@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using ChestSystem.Audio;
 using ChestSystem.Chest.Core;
-using ChestSystem.Chest;
 using ChestSystem.Chest.UI;
 using ChestSystem.Player.Core;
 using ChestSystem.Player.Data;
@@ -48,9 +47,7 @@ namespace ChestSystem.Core
         private void OnDestroy()
         {
             if (soundService != null)
-            {
                 soundService.UnregisterSoundEventListeners();
-            }
         }
     }
 }
