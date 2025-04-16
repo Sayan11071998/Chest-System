@@ -3,6 +3,7 @@ using ChestSystem.Chest.Data;
 using ChestSystem.Core;
 using ChestSystem.UI.Core;
 using ChestSystem.Utilities;
+using ChestSystem.Chest.Utilities;
 
 namespace ChestSystem.Chest.States
 {

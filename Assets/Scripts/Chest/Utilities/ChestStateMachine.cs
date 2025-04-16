@@ -4,7 +4,7 @@ using ChestSystem.Chest.Data;
 using ChestSystem.Chest.States;
 using ChestSystem.Utilities;
 
-namespace ChestSystem.Chest
+namespace ChestSystem.Chest.Utilities
 {
     public class ChestStateMachine
     {

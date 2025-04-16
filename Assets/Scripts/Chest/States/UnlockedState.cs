@@ -5,6 +5,7 @@ using ChestSystem.Events;
 using ChestSystem.UI.Components;
 using ChestSystem.UI.Core;
 using ChestSystem.Utilities;
+using ChestSystem.Chest.Utilities;
 
 namespace ChestSystem.Chest.States
 {
