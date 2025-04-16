@@ -16,25 +16,25 @@ namespace ChestSystem.Chest.UI
         [SerializeField] private GameObject gemCostContainer;
 
         private ChestController controller;
-        private ChestModel model;
+        private ChestModel chestModel;
 
         public ChestController Controller => controller;
-        public ChestType ChestType => model?.ChestType ?? ChestType.COMMON;
+        public ChestType ChestType => chestModel?.ChestType ?? ChestType.COMMON;
         public ChestState CurrentState => controller?.CurrentState ?? ChestState.LOCKED;
 
         private void Awake()
         {
-            model = new ChestModel();
-            controller = new ChestController(this, model);
+            chestModel = new ChestModel();
+            controller = new ChestController(this, chestModel);
         }
 
         private void Update() => controller.Update();
 
         public void Initialize(ChestScriptableObject chestData)
         {
-            this.name = chestData.chestType.ToString();
+            name = chestData.chestType.ToString();
 
-            model.Initialize(chestData, this);
+            chestModel.Initialize(chestData, this);
 
             if (chestImage != null && chestData.chestSprite != null)
                 chestImage.sprite = chestData.chestSprite;
@@ -90,13 +90,13 @@ namespace ChestSystem.Chest.UI
         public void UpdateTimerDisplay()
         {
             if (timerText != null)
-                timerText.text = model.FormatTime();
+                timerText.text = chestModel.FormatTime();
         }
 
         public void UpdateGemCostText()
         {
             if (gemCostText != null)
-                gemCostText.text = $"Cost: {model.CurrentGemCost}";
+                gemCostText.text = $"Cost: {chestModel.CurrentGemCost}";
         }
 
         public void SetGemCostVisible(bool visible)
@@ -119,6 +119,6 @@ namespace ChestSystem.Chest.UI
 
         private void OnDisable() => controller.Cleanup();
 
-        public ChestScriptableObject GetChestData() => model.GetChestData();
+        public ChestScriptableObject GetChestData() => chestModel.GetChestData();
     }
 }
