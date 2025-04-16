@@ -4,6 +4,7 @@ using ChestSystem.UI.Components;
 using ChestSystem.UI.Core;
 using ChestSystem.Utilities;
 using UnityEngine;
+using System.Collections;
 
 namespace ChestSystem.Chest
 {
@@ -11,6 +12,7 @@ namespace ChestSystem.Chest
     {
         private ChestController chestController;
         private ChestStateMachine stateMachine;
+        private Coroutine unlockCoroutine;
 
         public UnlockingState(ChestController chestController, ChestStateMachine stateMachine)
         {
@@ -22,15 +24,16 @@ namespace ChestSystem.Chest
         {
             chestController.View.UpdateStatusText("UNLOCKING");
             chestController.View.SetGemCostVisible(true);
+            StartUnlocking();
         }
 
-        public void OnStateExit() => chestController.View.SetGemCostVisible(false);
-
-        public void Update()
+        public void OnStateExit()
         {
-            // The timer functionality is now handled in the ChestModel
-            // but we can use Update() for any continuous state-specific behaviors
+            chestController.View.SetGemCostVisible(false);
+            StopUnlocking();
         }
+
+        public void Update() { }
 
         public void HandleChestClicked() => ShowInstantUnlockNotification();
 
@@ -85,5 +88,31 @@ namespace ChestSystem.Chest
         }
 
         public void OnUnlockTimerComplete() => stateMachine.ChangeState(ChestState.UNLOCKED);
+
+        private void StartUnlocking()
+        {
+            StopUnlocking();
+            unlockCoroutine = chestController.View.StartCoroutine(UnlockTimerCoroutine());
+        }
+
+        private void StopUnlocking()
+        {
+            if (unlockCoroutine != null)
+                chestController.View.StopCoroutine(unlockCoroutine);
+
+            unlockCoroutine = null;
+        }
+
+        private IEnumerator UnlockTimerCoroutine()
+        {
+            while (chestController.Model.RemainingUnlockTime > 0)
+            {
+                yield return new WaitForSeconds(1f);
+                chestController.Model.UpdateRemainingTime(1f);
+                chestController.View.UpdateTimeAndCost();
+            }
+
+            OnUnlockTimerComplete();
+        }
     }
 }
