@@ -25,13 +25,13 @@ namespace ChestSystem.Chest.States
 
         public void OnStateEnter()
         {
-            chestController.View.UpdateStatusText("UNLOCKED");
-            chestController.View.UpdateTimerDisplay();
-            chestController.View.SetGemCostVisible(false);
+            chestController.ChestView.UpdateStatusText("UNLOCKED");
+            chestController.ChestView.UpdateTimerDisplay();
+            chestController.ChestView.SetGemCostVisible(false);
 
-            ChestScriptableObject chestData = chestController.Model.GetChestData();
+            ChestScriptableObject chestData = chestController.ChestModel.GetChestData();
             if (chestData.unlockedChestSprite != null)
-                chestController.View.UpdateChestSprite(chestData.unlockedChestSprite);
+                chestController.ChestView.UpdateChestSprite(chestData.unlockedChestSprite);
 
             chestController.OnUnlockCompleted();
 
@@ -48,14 +48,14 @@ namespace ChestSystem.Chest.States
         {
             if (!rewardsCalculated)
             {
-                chestController.Model.GetChestData().CalculateRewards(out coinsAwarded, out gemsAwarded);
+                chestController.ChestModel.GetChestData().CalculateRewards(out coinsAwarded, out gemsAwarded);
                 rewardsCalculated = true;
             }
         }
 
         private void ShowRewardsNotification()
         {
-            string title = $"{chestController.View.ChestType} CHEST REWARDS";
+            string title = $"{chestController.ChestView.ChestType} CHEST REWARDS";
             string message = $"You are about to collect:\n\n{coinsAwarded} coins\n{gemsAwarded} gems\n\nTap to collect!";
             string buttonText = "COLLECT";
 
@@ -76,8 +76,8 @@ namespace ChestSystem.Chest.States
             playerController.UpdateCoinCount(playerController.CoinCount + coinsAwarded);
             playerController.UpdateGemsCount(playerController.GemsCount + gemsAwarded);
 
-            EventService.Instance.OnChestCollected.InvokeEvent(chestController.View, coinsAwarded, gemsAwarded);
-            GameService.Instance.chestService.RemoveChestAndMaintainMinimumSlots(chestController.View, 4);
+            EventService.Instance.OnChestCollected.InvokeEvent(chestController.ChestView, coinsAwarded, gemsAwarded);
+            GameService.Instance.chestService.RemoveChestAndMaintainMinimumSlots(chestController.ChestView, 4);
 
             stateMachine.ChangeState(ChestState.COLLECTED);
         }

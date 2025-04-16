@@ -25,14 +25,14 @@ namespace ChestSystem.Chest.States
 
         public void OnStateEnter()
         {
-            chestController.View.UpdateStatusText("UNLOCKING");
-            chestController.View.SetGemCostVisible(true);
+            chestController.ChestView.UpdateStatusText("UNLOCKING");
+            chestController.ChestView.SetGemCostVisible(true);
             StartUnlocking();
         }
 
         public void OnStateExit()
         {
-            chestController.View.SetGemCostVisible(false);
+            chestController.ChestView.SetGemCostVisible(false);
             StopUnlocking();
         }
 
@@ -42,9 +42,9 @@ namespace ChestSystem.Chest.States
 
         private void ShowInstantUnlockNotification()
         {
-            int gemCost = chestController.Model.CurrentGemCost;
+            int gemCost = chestController.ChestModel.CurrentGemCost;
             int playerGems = GameService.Instance.playerService.PlayerController.GemsCount;
-            string chestType = chestController.View.ChestType.ToString();
+            string chestType = chestController.ChestView.ChestType.ToString();
 
             string title = $"INSTANT UNLOCK - {chestType} CHEST";
             string message;
@@ -74,7 +74,7 @@ namespace ChestSystem.Chest.States
         private void AttemptInstantUnlock()
         {
             int playerGems = GameService.Instance.playerService.PlayerController.GemsCount;
-            int gemCost = chestController.Model.CurrentGemCost;
+            int gemCost = chestController.ChestModel.CurrentGemCost;
 
             if (playerGems >= gemCost)
             {
@@ -86,7 +86,7 @@ namespace ChestSystem.Chest.States
 
         private void CompleteUnlocking()
         {
-            chestController.Model.CompleteUnlocking();
+            chestController.ChestModel.CompleteUnlocking();
             stateMachine.ChangeState(ChestState.UNLOCKED);
         }
 
@@ -95,24 +95,24 @@ namespace ChestSystem.Chest.States
         private void StartUnlocking()
         {
             StopUnlocking();
-            unlockCoroutine = chestController.View.StartCoroutine(UnlockTimerCoroutine());
+            unlockCoroutine = chestController.ChestView.StartCoroutine(UnlockTimerCoroutine());
         }
 
         private void StopUnlocking()
         {
             if (unlockCoroutine != null)
-                chestController.View.StopCoroutine(unlockCoroutine);
+                chestController.ChestView.StopCoroutine(unlockCoroutine);
 
             unlockCoroutine = null;
         }
 
         private IEnumerator UnlockTimerCoroutine()
         {
-            while (chestController.Model.RemainingUnlockTime > 0)
+            while (chestController.ChestModel.RemainingUnlockTime > 0)
             {
                 yield return new WaitForSeconds(1f);
-                chestController.Model.UpdateRemainingTime(1f);
-                chestController.View.UpdateTimeAndCost();
+                chestController.ChestModel.UpdateRemainingTime(1f);
+                chestController.ChestView.UpdateTimeAndCost();
             }
 
             OnUnlockTimerComplete();
