@@ -27,6 +27,11 @@ namespace ChestSystem.Chest
             chestController.View.UpdateStatusText("UNLOCKED");
             chestController.View.UpdateTimerDisplay();
             chestController.View.SetGemCostVisible(false);
+
+            ChestScriptableObject chestData = chestController.Model.GetChestData();
+            if (chestData.unlockedChestSprite != null)
+                chestController.View.UpdateChestSprite(chestData.unlockedChestSprite);
+
             chestController.OnUnlockCompleted();
 
             CalculateRewards();
