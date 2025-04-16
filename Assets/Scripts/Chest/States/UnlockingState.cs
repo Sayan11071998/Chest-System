@@ -6,6 +6,7 @@ using ChestSystem.Utilities;
 using UnityEngine;
 using System.Collections;
 using ChestSystem.Events;
+using ChestSystem.Chest.Data;
 
 namespace ChestSystem.Chest.States
 {
