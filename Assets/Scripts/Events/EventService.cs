@@ -15,19 +15,33 @@ namespace ChestSystem.Events
             }
         }
 
+        // Existing events
         public GameEventController<ChestView> OnChestSpawned { get; private set; }
         public GameEventController<ChestView> OnChestUnlockStarted { get; private set; }
         public GameEventController<ChestView> OnChestUnlockCompleted { get; private set; }
         public EventController<ChestView, int, int> OnChestCollected { get; private set; }
         public GameEventController<int> OnMaxSlotsIncreased { get; private set; }
 
+        // New audio-related events
+        public GameEventController OnUIButtonClick { get; private set; }
+        public GameEventController OnNotificationShow { get; private set; }
+        public GameEventController OnNotificationClose { get; private set; }
+        public GameEventController OnGemsSpend { get; private set; }
+
         public EventService()
         {
+            // Initialize existing events
             OnChestSpawned = new GameEventController<ChestView>();
             OnChestUnlockStarted = new GameEventController<ChestView>();
             OnChestUnlockCompleted = new GameEventController<ChestView>();
             OnChestCollected = new EventController<ChestView, int, int>();
             OnMaxSlotsIncreased = new GameEventController<int>();
+
+            // Initialize new audio-related events
+            OnUIButtonClick = new GameEventController();
+            OnNotificationShow = new GameEventController();
+            OnNotificationClose = new GameEventController();
+            OnGemsSpend = new GameEventController();
         }
     }
 }

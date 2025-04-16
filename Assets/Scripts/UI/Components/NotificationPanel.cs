@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using ChestSystem.Events;
 
 namespace ChestSystem.UI.Components
 {
@@ -50,6 +51,7 @@ namespace ChestSystem.UI.Components
                 StopCoroutine(fadeCoroutine);
 
             fadeCoroutine = StartCoroutine(FadeIn());
+            EventService.Instance.OnNotificationShow.InvokeEvent();
         }
 
         public void CloseNotification()
@@ -60,6 +62,7 @@ namespace ChestSystem.UI.Components
             fadeCoroutine = StartCoroutine(FadeOut());
 
             OnNotificationClosed?.Invoke();
+            EventService.Instance.OnNotificationClose.InvokeEvent();
         }
 
         private IEnumerator FadeIn()
