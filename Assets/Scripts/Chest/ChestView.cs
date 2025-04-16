@@ -49,11 +49,7 @@ namespace ChestSystem.Chest.UI
             chestButton.onClick.AddListener(OnChestClicked);
         }
 
-        private void OnChestClicked()
-        {
-            Debug.Log($"Chest clicked: {ChestType}");
-            controller.HandleChestClicked();
-        }
+        private void OnChestClicked() => controller.HandleChestClicked();
 
         public void UpdateStatusText(string text = null)
         {

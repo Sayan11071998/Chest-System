@@ -4,7 +4,6 @@ using ChestSystem.Events;
 using ChestSystem.UI.Components;
 using ChestSystem.UI.Core;
 using ChestSystem.Utilities;
-using UnityEngine;
 
 namespace ChestSystem.Chest
 {
@@ -75,8 +74,7 @@ namespace ChestSystem.Chest
             playerController.UpdateGemsCount(playerController.GemsCount + gemsAwarded);
 
             EventService.Instance.OnChestCollected.InvokeEvent(chestController.View, coinsAwarded, gemsAwarded);
-            GameService.Instance.chestService.ReplaceChestWithEmptySlot(chestController.View);
-            Debug.Log($"Collected chest: {chestController.View.ChestType}. Rewards: {coinsAwarded} coins, {gemsAwarded} gems");
+            GameService.Instance.chestService.RemoveChestAndMaintainMinimumSlots(chestController.View, 4);
 
             stateMachine.ChangeState(ChestState.COLLECTED);
         }

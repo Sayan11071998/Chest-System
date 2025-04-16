@@ -75,10 +75,6 @@ namespace ChestSystem.Chest
                 GameService.Instance.playerService.PlayerController.UpdateGemsCount(playerGems - gemCost);
                 CompleteUnlocking();
             }
-            else
-            {
-                Debug.Log("Not enough gems to instantly unlock chest!");
-            }
         }
 
         private void CompleteUnlocking()

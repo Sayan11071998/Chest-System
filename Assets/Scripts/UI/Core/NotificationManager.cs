@@ -22,19 +22,11 @@ namespace ChestSystem.UI.Core
                 activePanel = Instantiate(notificationPanelPrefab, transform);
                 activePanel.gameObject.SetActive(false);
             }
-            else
-            {
-                Debug.LogError("Notification panel prefab is not assigned in NotificationManager!");
-            }
         }
 
         public void ShowNotification(string title, string message)
         {
-            if (activePanel == null)
-            {
-                Debug.LogError("No notification panel available! Make sure the NotificationManager has a valid notificationPanelPrefab assigned.");
-                return;
-            }
+            if (activePanel == null) return;
 
             activePanel.ShowNotification(title, message);
         }
