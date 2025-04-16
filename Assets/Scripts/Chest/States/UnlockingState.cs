@@ -46,17 +46,20 @@ namespace ChestSystem.Chest
 
             string title = $"INSTANT UNLOCK - {chestType} CHEST";
             string message;
+            string buttonText;
 
             if (playerGems >= gemCost)
             {
                 message = $"Would you like to instantly unlock this {chestType.ToLower()} chest for {gemCost} gems?\n\nYou have: {playerGems} gems\nCost: {gemCost} gems\n\nTap to confirm!";
-                NotificationManager.Instance.ShowNotification(title, message);
+                buttonText = "CONFIRM";
+                NotificationManager.Instance.ShowNotification(title, message, buttonText);
                 NotificationPanel.OnNotificationClosed += ConfirmInstantUnlock;
             }
             else
             {
                 message = $"You don't have enough gems to instantly unlock this chest.\n\nYou have: {playerGems} gems\nRequired: {gemCost} gems\n\nWait for the timer or get more gems!";
-                NotificationManager.Instance.ShowNotification(title, message);
+                buttonText = "OKAY";
+                NotificationManager.Instance.ShowNotification(title, message, buttonText);
             }
         }
 

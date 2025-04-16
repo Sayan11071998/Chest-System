@@ -12,7 +12,8 @@ namespace ChestSystem.UI.Components
         [Header("UI References")]
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private TextMeshProUGUI messageText;
-        [SerializeField] private Button closeButton;
+        [SerializeField] private Button button;
+        [SerializeField] private TextMeshProUGUI buttonText;
 
         [Header("Animation Settings")]
         [SerializeField] private float fadeInDuration = 0.3f;
@@ -33,7 +34,7 @@ namespace ChestSystem.UI.Components
             if (canvasGroup == null)
                 canvasGroup = gameObject.AddComponent<CanvasGroup>();
 
-            closeButton.onClick.AddListener(CloseNotification);
+            button.onClick.AddListener(CloseNotification);
 
             canvasGroup.alpha = 0;
             canvasGroup.interactable = false;
@@ -41,10 +42,11 @@ namespace ChestSystem.UI.Components
             rectTransform.localScale = Vector3.zero;
         }
 
-        public void ShowNotification(string title, string message)
+        public void ShowNotification(string title, string message, string buttonText)
         {
             titleText.text = title.ToUpper();
             messageText.text = message;
+            this.buttonText.text = buttonText;
             gameObject.SetActive(true);
 
             if (fadeCoroutine != null)
@@ -113,6 +115,6 @@ namespace ChestSystem.UI.Components
             gameObject.SetActive(false);
         }
 
-        private void OnDestroy() => closeButton.onClick.RemoveListener(CloseNotification);
+        private void OnDestroy() => button.onClick.RemoveListener(CloseNotification);
     }
 }

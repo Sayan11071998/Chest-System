@@ -55,8 +55,9 @@ namespace ChestSystem.Chest
         {
             string title = $"{chestController.View.ChestType} CHEST REWARDS";
             string message = $"You are about to collect:\n\n{coinsAwarded} coins\n{gemsAwarded} gems\n\nTap to collect!";
+            string buttonText = "COLLECT";
 
-            NotificationManager.Instance.ShowNotification(title, message);
+            NotificationManager.Instance.ShowNotification(title, message, buttonText);
             NotificationPanel.OnNotificationClosed += CollectChestAfterNotification;
         }
 

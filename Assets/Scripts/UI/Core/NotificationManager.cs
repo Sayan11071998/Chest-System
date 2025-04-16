@@ -24,11 +24,11 @@ namespace ChestSystem.UI.Core
             }
         }
 
-        public void ShowNotification(string title, string message)
+        public void ShowNotification(string title, string message, string buttonText)
         {
             if (activePanel == null) return;
 
-            activePanel.ShowNotification(title, message);
+            activePanel.ShowNotification(title, message, buttonText);
         }
     }
 }
