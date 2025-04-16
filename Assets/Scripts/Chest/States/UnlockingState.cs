@@ -5,6 +5,7 @@ using ChestSystem.UI.Core;
 using ChestSystem.Utilities;
 using UnityEngine;
 using System.Collections;
+using ChestSystem.Events;
 
 namespace ChestSystem.Chest
 {
@@ -73,6 +74,7 @@ namespace ChestSystem.Chest
             if (playerGems >= gemCost)
             {
                 GameService.Instance.playerService.PlayerController.UpdateGemsCount(playerGems - gemCost);
+                EventService.Instance.OnGemsSpend.InvokeEvent();
                 CompleteUnlocking();
             }
         }
