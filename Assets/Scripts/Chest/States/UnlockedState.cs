@@ -1,11 +1,13 @@
 using ChestSystem.Chest.Core;
+using ChestSystem.Chest.Data;
 using ChestSystem.Core;
 using ChestSystem.Events;
 using ChestSystem.UI.Components;
 using ChestSystem.UI.Core;
 using ChestSystem.Utilities;
+using ChestSystem.Chest.Utilities;
 
-namespace ChestSystem.Chest
+namespace ChestSystem.Chest.States
 {
     public class UnlockedState : IState
     {
@@ -55,8 +57,9 @@ namespace ChestSystem.Chest
         {
             string title = $"{chestController.View.ChestType} CHEST REWARDS";
             string message = $"You are about to collect:\n\n{coinsAwarded} coins\n{gemsAwarded} gems\n\nTap to collect!";
+            string buttonText = "COLLECT";
 
-            NotificationManager.Instance.ShowNotification(title, message);
+            NotificationManager.Instance.ShowNotification(title, message, buttonText);
             NotificationPanel.OnNotificationClosed += CollectChestAfterNotification;
         }
 

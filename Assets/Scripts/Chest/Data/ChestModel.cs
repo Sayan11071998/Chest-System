@@ -1,7 +1,7 @@
 using ChestSystem.Chest.UI;
 using UnityEngine;
 
-namespace ChestSystem.Chest.Core
+namespace ChestSystem.Chest.Data
 {
     public class ChestModel
     {

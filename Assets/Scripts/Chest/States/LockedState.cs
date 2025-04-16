@@ -1,10 +1,11 @@
 using ChestSystem.Chest.Core;
+using ChestSystem.Chest.Data;
 using ChestSystem.Core;
 using ChestSystem.UI.Core;
 using ChestSystem.Utilities;
-using UnityEngine;
+using ChestSystem.Chest.Utilities;
 
-namespace ChestSystem.Chest
+namespace ChestSystem.Chest.States
 {
     public class LockedState : IState
     {
@@ -44,7 +45,8 @@ namespace ChestSystem.Chest
             {
                 string title = "CHEST LOCKED";
                 string message = "Another chest is already being unlocked!";
-                NotificationManager.Instance.ShowNotification(title, message);
+                string buttonText = "CLOSE";
+                NotificationManager.Instance.ShowNotification(title, message, buttonText);
             }
         }
     }

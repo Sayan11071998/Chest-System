@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ChestSystem.Chest.Data;
 using ChestSystem.Chest.UI;
 using ChestSystem.Chest.Utilities;
 using ChestSystem.Events;
@@ -115,7 +116,7 @@ namespace ChestSystem.Chest.Core
         {
             if (activeChests.Count >= maxChestSlots)
             {
-                NotificationManager.Instance.ShowNotification("CHEST SLOTS FULL", "All chest slots are currently full. Add more slots or open existing chests first.");
+                NotificationManager.Instance.ShowNotification("CHEST SLOTS FULL", "All chest slots are currently full. Add more slots or open existing chests first.", "CLOSE");
                 return;
             }
 
