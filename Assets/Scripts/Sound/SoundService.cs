@@ -1,9 +1,8 @@
-using ChestSystem.Sound;
 using UnityEngine;
 using System;
 using ChestSystem.Events;
 
-namespace ChestSystem.Audio
+namespace ChestSystem.Sound
 {
     public class SoundService
     {

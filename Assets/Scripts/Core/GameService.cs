@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using ChestSystem.Audio;
 using ChestSystem.Chest.Core;
 using ChestSystem.Chest.UI;
 using ChestSystem.Player.Core;
