@@ -8,6 +8,7 @@ namespace ChestSystem.Chest
         [Header("Chest Specifications")]
         public ChestType chestType;
         public Sprite chestSprite;
+        public Sprite unlockedChestSprite;
         [Tooltip("Percentage chance this chest will spawn (0-100)")]
         [Range(0, 100)]
         public int chestGenerationChance;

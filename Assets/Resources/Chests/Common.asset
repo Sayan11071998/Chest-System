@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chestType: 0
   chestSprite: {fileID: -7161132767433984542, guid: d6ce42371369c4846978bed293634f7d, type: 3}
+  unlockedChestSprite: {fileID: 4742988670767637233, guid: d2b671ce095368d47b1d837d29b43763, type: 3}
   chestGenerationChance: 70
   unlockTimeInSeconds: 900
   instantOpenCostInGems: 15

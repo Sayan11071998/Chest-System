@@ -108,6 +108,12 @@ namespace ChestSystem.Chest.UI
                 gemCostContainer.SetActive(visible);
         }
 
+        public void UpdateChestSprite(Sprite newSprite)
+        {
+            if (chestImage != null && newSprite != null)
+                chestImage.sprite = newSprite;
+        }
+
         public void OnReturnToPool()
         {
             controller.Cleanup();
