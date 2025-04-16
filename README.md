@@ -9,11 +9,6 @@ Welcome to the **Advanced Chest System** project—a modular, scalable Unity fra
 - [Architectural Patterns](#architectural-patterns)
 - [Unity-Specific Enhancements](#unity-specific-enhancements)
 - [Software Engineering Best Practices](#software-engineering-best-practices)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
 
 ## Overview
 
@@ -86,13 +81,3 @@ In addition to game features, this project is built with strong engineering prin
 
 - **📦 Logical Code Organization:**  
   Utilizes namespaces and extensive interfaces to ensure that expanding the system is straightforward and manageable.
-
-## Installation
-
-To set up the Advanced Chest System on your local machine:
-
-1. **Clone the Repository:**
-
-   ```bash
-   git clone https://github.com/yourusername/advanced-chest-system.git
-   cd advanced-chest-system
