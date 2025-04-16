@@ -1,4 +1,3 @@
-using System.Collections;
 using ChestSystem.Chest.UI;
 using UnityEngine;
 
@@ -9,7 +8,6 @@ namespace ChestSystem.Chest.Core
         private ChestScriptableObject chestData;
         private float remainingUnlockTime;
         private int currentGemCost;
-        private Coroutine unlockCoroutine;
         private ChestView view;
 
         private const float MINUTES_PER_GEM = 10f;
@@ -17,7 +15,6 @@ namespace ChestSystem.Chest.Core
         public ChestType ChestType => chestData?.chestType ?? ChestType.COMMON;
         public float RemainingUnlockTime => remainingUnlockTime;
         public int CurrentGemCost => currentGemCost;
-        public bool IsUnlocking => unlockCoroutine != null;
 
         public void Initialize(ChestScriptableObject chestData, ChestView view)
         {
@@ -28,7 +25,7 @@ namespace ChestSystem.Chest.Core
             UpdateGemCost();
         }
 
-        private void UpdateGemCost()
+        public void UpdateGemCost()
         {
             float minutesRemaining = remainingUnlockTime / 60f;
             currentGemCost = Mathf.CeilToInt(minutesRemaining / MINUTES_PER_GEM);
@@ -37,40 +34,17 @@ namespace ChestSystem.Chest.Core
                 currentGemCost = 1;
         }
 
-        public IEnumerator UnlockTimerCoroutine()
+        public void UpdateRemainingTime(float timeDecrement)
         {
-            while (remainingUnlockTime > 0)
-            {
-                yield return new WaitForSeconds(1f);
-                remainingUnlockTime -= 1f;
-                UpdateGemCost();
+            remainingUnlockTime -= timeDecrement;
+            if (remainingUnlockTime < 0)
+                remainingUnlockTime = 0;
 
-                view.UpdateTimeAndCost();
-            }
-
-            remainingUnlockTime = 0;
-
-            UnlockingState unlockingState = view.Controller.ChestStateMachine.GetStates()[ChestState.UNLOCKING] as UnlockingState;
-            unlockingState?.OnUnlockTimerComplete();
-        }
-
-        public void StopUnlocking()
-        {
-            if (unlockCoroutine != null)
-                view.StopCoroutine(unlockCoroutine);
-
-            unlockCoroutine = null;
-        }
-
-        public void StartUnlocking()
-        {
-            StopUnlocking();
-            unlockCoroutine = view.StartCoroutine(UnlockTimerCoroutine());
+            UpdateGemCost();
         }
 
         public void CompleteUnlocking()
         {
-            StopUnlocking();
             remainingUnlockTime = 0;
             UpdateGemCost();
         }
@@ -96,9 +70,11 @@ namespace ChestSystem.Chest.Core
             {
                 int hours = Mathf.FloorToInt(timeInSeconds / 3600);
                 int minutes = Mathf.FloorToInt((timeInSeconds % 3600) / 60);
-                return string.Format("{0}h {1}m", hours, minutes);
+                int seconds = Mathf.FloorToInt(timeInSeconds % 60);
+                return string.Format("{0}h {1}m {2}s", hours, minutes, seconds);
             }
         }
+
 
         public ChestScriptableObject GetChestData() => chestData;
     }

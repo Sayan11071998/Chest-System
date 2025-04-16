@@ -34,7 +34,6 @@ namespace ChestSystem.Chest
             if (chestService.CanStartUnlocking())
             {
                 chestService.SetUnlockingChest(chestController.View);
-                chestController.Model.StartUnlocking();
                 chestController.View.SetGemCostVisible(true);
                 chestController.View.UpdateStatusText("UNLOCKING");
                 chestController.SetRegisteredAsUnlocking(true);

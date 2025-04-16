@@ -38,10 +38,8 @@ namespace ChestSystem.Chest.Core
 
         public void Cleanup()
         {
-            if (isRegisteredAsUnlocking && model.IsUnlocking)
+            if (isRegisteredAsUnlocking)
             {
-                model.StopUnlocking();
-
                 if (GameService.Instance != null && GameService.Instance.chestService != null)
                     GameService.Instance.chestService.OnChestUnlockCompleted(view);
 
