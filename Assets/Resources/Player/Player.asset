@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   coinCount: 4703
-  gemsCount: 1
+  gemsCount: 343
