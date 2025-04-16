@@ -2,9 +2,8 @@ using ChestSystem.Chest.Core;
 using ChestSystem.Core;
 using ChestSystem.UI.Core;
 using ChestSystem.Utilities;
-using UnityEngine;
 
-namespace ChestSystem.Chest
+namespace ChestSystem.Chest.States
 {
     public class LockedState : IState
     {

@@ -7,7 +7,7 @@ using UnityEngine;
 using System.Collections;
 using ChestSystem.Events;
 
-namespace ChestSystem.Chest
+namespace ChestSystem.Chest.States
 {
     public class UnlockingState : IState
     {

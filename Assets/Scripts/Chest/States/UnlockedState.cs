@@ -5,7 +5,7 @@ using ChestSystem.UI.Components;
 using ChestSystem.UI.Core;
 using ChestSystem.Utilities;
 
-namespace ChestSystem.Chest
+namespace ChestSystem.Chest.States
 {
     public class UnlockedState : IState
     {
