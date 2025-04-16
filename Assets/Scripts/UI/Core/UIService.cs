@@ -8,14 +8,8 @@ namespace ChestSystem.UI.Core
     {
         [SerializeField] private Button chestGenerationButton;
 
-        private void Start()
-        {
-            AddListenerToButtons();
-        }
+        private void Start() => AddListenerToButtons();
 
-        private void AddListenerToButtons()
-        {
-            chestGenerationButton.onClick.AddListener(GameService.Instance.chestService.GenerateRandomChest);
-        }
+        private void AddListenerToButtons() => chestGenerationButton.onClick.AddListener(GameService.Instance.chestService.GenerateRandomChest);
     }
 }

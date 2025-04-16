@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using ChestSystem.Chest.Core;
 using ChestSystem.Chest.States;
 using ChestSystem.Utilities;
-using UnityEngine;
 
 namespace ChestSystem.Chest
 {
@@ -34,7 +33,6 @@ namespace ChestSystem.Chest
             {
                 currentChestStateEnum = newState;
                 ChangeState(states[newState]);
-                Debug.Log($"Changing to state: {newState}");
             }
         }
 

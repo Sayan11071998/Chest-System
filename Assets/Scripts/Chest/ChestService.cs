@@ -58,20 +58,37 @@ namespace ChestSystem.Chest.Core
             int lastIndex = chestParent.childCount - 1;
             emptySlot.transform.SetSiblingIndex(lastIndex);
             AddEmptySlot(emptySlot);
-
-            Debug.Log($"Created empty slot. Total slots: {ActiveEmptySlots.Count}");
         }
 
-        public void ReplaceChestWithEmptySlot(ChestView chest)
+        public void RemoveChestAndMaintainMinimumSlots(ChestView chest, int minimumSlotsToMaintain = 4)
         {
             int siblingIndex = chest.transform.GetSiblingIndex();
             RemoveChest(chest);
 
-            EmptySlotView emptySlot = emptySlotPool.GetEmptySlot();
-            emptySlot.gameObject.SetActive(true);
-            emptySlot.Initialize();
-            emptySlot.transform.SetSiblingIndex(siblingIndex);
-            AddEmptySlot(emptySlot);
+            int totalSlots = activeChests.Count + activeEmptySlots.Count;
+
+            if (totalSlots < minimumSlotsToMaintain)
+            {
+                EmptySlotView emptySlot = emptySlotPool.GetEmptySlot();
+                emptySlot.gameObject.SetActive(true);
+                emptySlot.Initialize();
+                emptySlot.transform.SetSiblingIndex(siblingIndex);
+                AddEmptySlot(emptySlot);
+            }
+            else
+            {
+                foreach (var activeChest in activeChests)
+                {
+                    if (activeChest.transform.GetSiblingIndex() > siblingIndex)
+                        activeChest.transform.SetSiblingIndex(activeChest.transform.GetSiblingIndex() - 1);
+                }
+
+                foreach (var emptySlot in activeEmptySlots)
+                {
+                    if (emptySlot.transform.GetSiblingIndex() > siblingIndex)
+                        emptySlot.transform.SetSiblingIndex(emptySlot.transform.GetSiblingIndex() - 1);
+                }
+            }
         }
 
         private bool GetAndRemoveEmptySlot(out int siblingIndex)
@@ -92,14 +109,12 @@ namespace ChestSystem.Chest.Core
             maxChestSlots += amountToIncrease;
             AddNewEmptySlots(amountToIncrease);
             EventService.Instance.OnMaxSlotsIncreased.InvokeEvent(maxChestSlots);
-            Debug.Log($"Max chest slots increased to {maxChestSlots}");
         }
 
         public void GenerateRandomChest()
         {
             if (activeChests.Count >= maxChestSlots)
             {
-                Debug.Log("All chest slots are full!");
                 NotificationManager.Instance.ShowNotification("CHEST SLOTS FULL", "All chest slots are currently full. Add more slots or open existing chests first.");
                 return;
             }
@@ -134,14 +149,9 @@ namespace ChestSystem.Chest.Core
 
                 chest.transform.SetSiblingIndex(siblingIndex);
                 AddChest(chest);
-
-                Debug.Log($"Spawned chest: {chestData.chestType}, Active chests: {ActiveChests.Count}");
-            }
-            else
-            {
-                Debug.LogWarning("No empty slots available!");
             }
         }
+
         public bool CanStartUnlocking() => currentlyUnlockingChest == null;
 
         public void SetUnlockingChest(ChestView chest)

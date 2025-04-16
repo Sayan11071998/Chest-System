@@ -45,7 +45,6 @@ namespace ChestSystem.Chest
                 string title = "CHEST LOCKED";
                 string message = "Another chest is already being unlocked!";
                 NotificationManager.Instance.ShowNotification(title, message);
-                Debug.Log("Another chest is already being unlocked!");
             }
         }
     }
