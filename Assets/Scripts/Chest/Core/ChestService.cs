@@ -114,7 +114,7 @@ namespace ChestSystem.Chest.Core
 
         public void GenerateRandomChest()
         {
-            if (activeChests.Count >= maxChestSlots)
+            if (activeEmptySlots.Count == 0)
             {
                 NotificationManager.Instance.ShowNotification("CHEST SLOTS FULL", "All chest slots are currently full. Add more slots or open existing chests first.", "CLOSE");
                 return;
