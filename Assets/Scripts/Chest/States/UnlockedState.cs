@@ -1,4 +1,5 @@
 using ChestSystem.Chest.Core;
+using ChestSystem.Chest.Data;
 using ChestSystem.Core;
 using ChestSystem.Events;
 using ChestSystem.UI.Components;

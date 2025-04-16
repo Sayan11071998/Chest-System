@@ -10,6 +10,7 @@ using ChestSystem.UI.Components;
 using ChestSystem.Utilities;
 using UnityEngine;
 using ChestSystem.Sound;
+using ChestSystem.Chest.Data;
 
 namespace ChestSystem.Core
 {
