@@ -14,6 +14,7 @@ namespace ChestSystem.UI.Data
         public const string ChestLocked = "CHEST LOCKED";
         public const string InstantUnlockChest = "INSTANT UNLOCK - {0} CHEST";
         public const string ChestSlotsFull = "CHEST SLOTS FULL";
+        public const string InstantUnlockCompleted = "INSTANT UNLOCK COMPLETED";
         #endregion
 
         #region Notification Popup Messages
@@ -23,6 +24,7 @@ namespace ChestSystem.UI.Data
         public const string WouldLikeInstantUnlock = "Would you like to instantly unlock this {0} chest for {1} gems?\n\nYou have: {2} gems\nCost: {1} gems\n\nTap to confirm!";
         public const string DoNotHaveEnoughGems = "You don't have enough gems to instantly unlock this chest.\n\nYou have: {0} gems\nRequired: {1} gems\n\nWait for the timer or get more gems!";
         public const string AllChestsAreCurrentlyFull = "All chest slots are currently full. Add more slots or open existing chests first.";
+        public const string ChestInstantlyUnlockedWithGems = "Chest has been instantly unlocked with gems";
         #endregion
 
         #region Notification Popup Button Lebels
@@ -30,6 +32,7 @@ namespace ChestSystem.UI.Data
         public const string Collect = "COLLECT";
         public const string Confirm = "CONFIRM";
         public const string Okay = "OKAY";
+        public const string Undo = "UNDO";
         #endregion
     }
 }
