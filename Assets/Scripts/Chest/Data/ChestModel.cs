@@ -9,7 +9,6 @@ namespace ChestSystem.Chest.Data
         private float remainingUnlockTime;
         private int currentGemCost;
         private Sprite chestSprite;
-        private ChestView chestView;
 
         private const float MINUTES_PER_GEM = 10f;
 
@@ -18,12 +17,11 @@ namespace ChestSystem.Chest.Data
         public int CurrentGemCost => currentGemCost;
         public Sprite ChestSprite => chestSprite;
 
-        public void Initialize(ChestScriptableObject chestDatas, ChestView view)
+        public void Initialize(ChestScriptableObject chestDatas)
         {
             chestData = chestDatas;
             remainingUnlockTime = chestData.unlockTimeInSeconds;
             chestSprite = chestData.chestSprite;
-            chestView = view;
 
             UpdateGemCost();
         }

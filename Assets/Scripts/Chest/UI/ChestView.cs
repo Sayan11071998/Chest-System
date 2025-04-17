@@ -34,7 +34,7 @@ namespace ChestSystem.Chest.UI
         {
             name = chestData.chestType.ToString();
 
-            chestModel.Initialize(chestData, this);
+            chestModel.Initialize(chestData);
 
             if (chestImage != null && chestData.chestSprite != null)
                 chestImage.sprite = chestData.chestSprite;
