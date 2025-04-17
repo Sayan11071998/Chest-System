@@ -10,7 +10,7 @@ Welcome to my latest Unity project—a **fully modular and scalable Chest System
 Each chest is generated with randomized properties (from **Common** to **Legendary**), bringing unpredictability and excitement to every session.
 
 ### ⏱️ Timed Unlocking with a Twist
-Chests use real-time countdowns to build anticipation. Players can either wait or spend **gems** to unlock instantly—introducing strategy and choice into progression.
+Chests use real-time countdowns to build anticipation. Players can either wait or spend **gems** to unlock instantly—introducing strategy and choice into progression. Plus, with the **Undo** feature implemented via the Command Pattern, players can revert an instant unlock if they change their mind.
 
 ### 🎨 Dynamic UI Feedback
 Chests transition through visual states—**Locked**, **Unlocking**, **Unlocked**, and **Collected**—each with engaging animations and satisfying sound feedback.
@@ -33,6 +33,9 @@ Robust handling of chest states ensures smooth transitions between different pha
 
 ### 📢 Observer Pattern
 Event-driven design enables clean communication across game components, making the system modular and scalable.
+
+### 💼 Command Pattern
+Encapsulates actions—such as spending gems for an instant unlock—into command objects, allowing execution and **undo** operations. This design supports reverting an instant chest unlock, improving user control and maintainability.
 
 ### ♻️ Object Pooling
 Efficient use of object pooling minimizes instantiation overhead—crucial for maintaining smooth mobile performance.
@@ -88,7 +91,6 @@ What challenging game systems have *you* built recently? I’d love to hear your
 
 > Drop a ⭐ if you find this project interesting or useful, and feel free to fork it or open a PR with improvements or cool additions!
 
----
 
 ![Image](https://github.com/user-attachments/assets/bf126721-4c44-45cc-b0b7-fa6715ad5c25)
 
