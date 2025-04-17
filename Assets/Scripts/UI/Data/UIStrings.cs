@@ -7,6 +7,7 @@ namespace ChestSystem.UI.Data
         public const string Unlocking = "UNLOCKING";
         public const string Unlocked = "UNLOCKED";
         public const string Collected = "COLLECTED";
+        public const string Ready = "Ready!";
         #endregion
 
         #region Notification Popup Lebels

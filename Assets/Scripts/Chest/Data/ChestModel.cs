@@ -1,3 +1,4 @@
+using ChestSystem.UI.Data;
 using UnityEngine;
 
 namespace ChestSystem.Chest.Data
@@ -54,7 +55,7 @@ namespace ChestSystem.Chest.Data
             float timeInSeconds = remainingUnlockTime;
 
             if (timeInSeconds <= 0)
-                return "Ready!";
+                return UIStrings.Ready;
 
             if (timeInSeconds < 60)
             {
