@@ -6,8 +6,8 @@ namespace ChestSystem.Chest.States
 {
     public class CollectedState : IState
     {
-        private ChestStateMachine stateMachine;
         private ChestController chestController;
+        private ChestStateMachine stateMachine;
 
         public CollectedState(ChestController chestController, ChestStateMachine stateMachine)
         {
