@@ -15,10 +15,13 @@ namespace ChestSystem.UI.Data
 
         #region Notification Popup Messages
         public const string AnotherChestIsAlreadyBeingUnlocked = "Another chest is already being unlocked!";
+        public const string ChestRewards = "{0} CHEST REWARDS";
+        public const string AboutToCollect = "You are about to collect:\n\n{0} coins\n{1} gems\n\nTap to collect!";
         #endregion
 
         #region Notification Popup Button Lebels
         public const string Close = "CLOSE";
+        public const string Collect = "COLLECT";
         #endregion
     }
 }
