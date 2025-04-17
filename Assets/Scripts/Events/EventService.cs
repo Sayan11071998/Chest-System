@@ -15,31 +15,31 @@ namespace ChestSystem.Events
             }
         }
 
-        public GameEventController<ChestView> OnChestSpawned { get; private set; }
-        public GameEventController<ChestView> OnChestUnlockStarted { get; private set; }
-        public GameEventController<ChestView> OnChestUnlockCompleted { get; private set; }
+        public EventController<ChestView> OnChestSpawned { get; private set; }
+        public EventController<ChestView> OnChestUnlockStarted { get; private set; }
+        public EventController<ChestView> OnChestUnlockCompleted { get; private set; }
         public EventController<ChestView, int, int> OnChestCollected { get; private set; }
-        public GameEventController<int> OnMaxSlotsIncreased { get; private set; }
+        public EventController<int> OnMaxSlotsIncreased { get; private set; }
 
-        public GameEventController OnUIButtonClick { get; private set; }
-        public GameEventController OnNotificationShow { get; private set; }
-        public GameEventController OnNotificationClose { get; private set; }
-        public GameEventController OnGemsSpend { get; private set; }
-        public GameEventController OnCommandUndo { get; private set; }
+        public EventController OnUIButtonClick { get; private set; }
+        public EventController OnNotificationShow { get; private set; }
+        public EventController OnNotificationClose { get; private set; }
+        public EventController OnGemsSpend { get; private set; }
+        public EventController OnCommandUndo { get; private set; }
 
         public EventService()
         {
-            OnChestSpawned = new GameEventController<ChestView>();
-            OnChestUnlockStarted = new GameEventController<ChestView>();
-            OnChestUnlockCompleted = new GameEventController<ChestView>();
+            OnChestSpawned = new EventController<ChestView>();
+            OnChestUnlockStarted = new EventController<ChestView>();
+            OnChestUnlockCompleted = new EventController<ChestView>();
             OnChestCollected = new EventController<ChestView, int, int>();
-            OnMaxSlotsIncreased = new GameEventController<int>();
+            OnMaxSlotsIncreased = new EventController<int>();
 
-            OnUIButtonClick = new GameEventController();
-            OnNotificationShow = new GameEventController();
-            OnNotificationClose = new GameEventController();
-            OnGemsSpend = new GameEventController();
-            OnCommandUndo = new GameEventController();
+            OnUIButtonClick = new EventController();
+            OnNotificationShow = new EventController();
+            OnNotificationClose = new EventController();
+            OnGemsSpend = new EventController();
+            OnCommandUndo = new EventController();
         }
     }
 }
