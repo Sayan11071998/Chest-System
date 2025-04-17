@@ -5,8 +5,19 @@ namespace ChestSystem.Player.Core
 {
     public class PlayerService
     {
-        public PlayerController PlayerController { get; private set; }
+        private PlayerController playerController;
+        private PlayerModel playerModel;
 
-        public PlayerService(PlayerView playerView, PlayerScriptableObject playerScriptableObject) => PlayerController = new PlayerController(playerView, playerScriptableObject);
+        public PlayerController PlayerController => playerController;
+
+        public PlayerService(PlayerView playerView, PlayerScriptableObject playerData)
+        {
+            playerModel = new PlayerModel();
+            playerModel.Initialize(playerData);
+
+            playerController = new PlayerController(playerView, playerModel);
+
+            playerView.SetController(playerController);
+        }
     }
 }

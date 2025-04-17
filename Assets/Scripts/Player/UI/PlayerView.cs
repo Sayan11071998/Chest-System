@@ -11,9 +11,11 @@ namespace ChestSystem.Player.UI
 
         private PlayerController playerController;
 
-        public void SetPlayerController(PlayerController _playerController)
+        public PlayerController PlayerController => playerController;
+
+        public void SetController(PlayerController controller)
         {
-            playerController = _playerController;
+            playerController = controller;
             UpdateUI();
         }
 
@@ -23,7 +25,16 @@ namespace ChestSystem.Player.UI
             UpdateGemsText();
         }
 
-        public void UpdateCoinText() => coinText.text = playerController.CoinCount.ToString();
-        public void UpdateGemsText() => gemsText.text = playerController.GemsCount.ToString();
+        public void UpdateCoinText()
+        {
+            if (playerController != null)
+                coinText.text = playerController.CoinCount.ToString();
+        }
+
+        public void UpdateGemsText()
+        {
+            if (playerController != null)
+                gemsText.text = playerController.GemsCount.ToString();
+        }
     }
 }

@@ -15,42 +15,39 @@ namespace ChestSystem.Chest.UI
         [SerializeField] private TextMeshProUGUI gemCostText;
         [SerializeField] private GameObject gemCostContainer;
 
-        private ChestController controller;
-        private ChestModel chestModel;
+        private ChestController chestController;
 
-        public ChestController Controller => controller;
-        public ChestType ChestType => chestModel?.ChestType ?? ChestType.COMMON;
-        public ChestState CurrentState => controller?.CurrentState ?? ChestState.LOCKED;
+        public ChestController ChestController => chestController;
+        public ChestType ChestType => chestController?.ChestModel.ChestType ?? ChestType.COMMON;
+        public ChestState CurrentState => chestController?.CurrentState ?? ChestState.LOCKED;
 
-        private void Awake()
+        private void Update()
         {
-            chestModel = new ChestModel();
-            controller = new ChestController(this, chestModel);
+            if (chestController != null)
+                chestController.Update();
         }
 
-        private void Update() => controller.Update();
-
-        public void Initialize(ChestScriptableObject chestData)
+        public void SetController(ChestController controller)
         {
-            name = chestData.chestType.ToString();
+            chestController = controller;
+            chestButton.onClick.AddListener(OnChestClicked);
+        }
 
-            chestModel.Initialize(chestData, this);
-
-            if (chestImage != null && chestData.chestSprite != null)
-                chestImage.sprite = chestData.chestSprite;
+        public void Initialize(ChestType chestType)
+        {
+            name = chestType.ToString();
 
             if (gemCostContainer != null)
                 gemCostContainer.SetActive(false);
 
-            UpdateStatusText();
-            UpdateTimerDisplay();
-            UpdateGemCostText();
-
-            controller.ChestStateMachine.ChangeState(ChestState.LOCKED);
-            chestButton.onClick.AddListener(OnChestClicked);
+            UpdateStatusText("LOCKED");
         }
 
-        private void OnChestClicked() => controller.HandleChestClicked();
+        private void OnChestClicked()
+        {
+            if (chestController != null)
+                chestController.HandleChestClicked();
+        }
 
         public void UpdateStatusText(string text = null)
         {
@@ -60,9 +57,9 @@ namespace ChestSystem.Chest.UI
                 {
                     statusText.text = text;
                 }
-                else
+                else if (chestController != null)
                 {
-                    switch (controller.CurrentState)
+                    switch (chestController.CurrentState)
                     {
                         case ChestState.LOCKED:
                             statusText.text = "LOCKED";
@@ -89,14 +86,14 @@ namespace ChestSystem.Chest.UI
 
         public void UpdateTimerDisplay()
         {
-            if (timerText != null)
-                timerText.text = chestModel.FormatTime();
+            if (timerText != null && chestController != null)
+                timerText.text = chestController.ChestModel.FormatTime();
         }
 
         public void UpdateGemCostText()
         {
-            if (gemCostText != null)
-                gemCostText.text = $"Cost: {chestModel.CurrentGemCost}";
+            if (gemCostText != null && chestController != null)
+                gemCostText.text = $"Cost: {chestController.ChestModel.CurrentGemCost}";
         }
 
         public void SetGemCostVisible(bool visible)
@@ -113,12 +110,19 @@ namespace ChestSystem.Chest.UI
 
         public void OnReturnToPool()
         {
-            controller.Cleanup();
+            if (chestController != null)
+                chestController.Cleanup();
+
             chestButton.onClick.RemoveAllListeners();
+            chestController = null;
         }
 
-        private void OnDisable() => controller.Cleanup();
+        private void OnDisable()
+        {
+            if (chestController != null)
+                chestController.Cleanup();
+        }
 
-        public ChestScriptableObject GetChestData() => chestModel.GetChestData();
+        public ChestScriptableObject GetChestData() => chestController?.ChestModel.GetChestData();
     }
 }

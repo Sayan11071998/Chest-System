@@ -95,10 +95,10 @@ namespace ChestSystem.Chest.Core
         private bool GetAndRemoveEmptySlot(out int siblingIndex)
         {
             siblingIndex = -1;
-            if (ActiveEmptySlots.Count == 0)
+            if (activeEmptySlots.Count == 0)
                 return false;
 
-            EmptySlotView slot = ActiveEmptySlots[0];
+            EmptySlotView slot = activeEmptySlots[0];
             siblingIndex = slot.transform.GetSiblingIndex();
             RemoveEmptySlot(slot);
             emptySlotPool.ReturnEmptySlotToPool(slot);
@@ -146,7 +146,18 @@ namespace ChestSystem.Chest.Core
             {
                 ChestView chest = chestPool.GetChest();
                 chest.gameObject.SetActive(true);
-                chest.Initialize(chestData);
+
+                ChestModel chestModel = new ChestModel();
+                chestModel.Initialize(chestData);
+
+                ChestController controller = new ChestController(chest, chestModel);
+                chest.SetController(controller);
+
+                chest.Initialize(chestData.chestType);
+                chest.UpdateChestSprite(chestData.chestSprite);
+                chest.UpdateStatusText();
+                chest.UpdateTimerDisplay();
+                chest.UpdateGemCostText();
 
                 chest.transform.SetSiblingIndex(siblingIndex);
                 AddChest(chest);

@@ -5,29 +5,30 @@ namespace ChestSystem.Player.Core
 {
     public class PlayerController
     {
-        private readonly PlayerScriptableObject playerScriptableObject;
-        private readonly PlayerView playerView;
+        private PlayerView playerView;
+        private PlayerModel playerModel;
 
-        public int CoinCount => playerScriptableObject.coinCount;
-        public int GemsCount => playerScriptableObject.gemsCount;
+        public PlayerView PlayerView => playerView;
+        public PlayerModel PlayerModel => playerModel;
 
-        public PlayerController(PlayerView _playerView, PlayerScriptableObject _playerScriptableObject)
+        public int CoinCount => playerModel.CoinCount;
+        public int GemsCount => playerModel.GemsCount;
+
+        public PlayerController(PlayerView view, PlayerModel model)
         {
-            playerView = _playerView;
-            playerScriptableObject = _playerScriptableObject;
-
-            playerView.SetPlayerController(this);
+            playerView = view;
+            playerModel = model;
         }
 
         public void UpdateCoinCount(int newCoinCount)
         {
-            playerScriptableObject.coinCount = newCoinCount;
+            playerModel.UpdateCoinCount(newCoinCount);
             playerView.UpdateCoinText();
         }
 
         public void UpdateGemsCount(int newGemsValue)
         {
-            playerScriptableObject.gemsCount = newGemsValue;
+            playerModel.UpdateGemsCount(newGemsValue);
             playerView.UpdateGemsText();
         }
     }
