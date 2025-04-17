@@ -86,12 +86,6 @@ namespace ChestSystem.Chest.States
             }
         }
 
-        private void CompleteUnlocking()
-        {
-            chestController.ChestModel.CompleteUnlocking();
-            stateMachine.ChangeState(ChestState.UNLOCKED);
-        }
-
         public void OnUnlockTimerComplete() => stateMachine.ChangeState(ChestState.UNLOCKED);
 
         private void StartUnlocking()
