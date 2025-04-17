@@ -2,7 +2,7 @@ using System;
 
 namespace ChestSystem.Events
 {
-    public class GameEventController
+    public class EventController
     {
         public event Action baseEvent;
         public void InvokeEvent() => baseEvent?.Invoke();
@@ -10,7 +10,7 @@ namespace ChestSystem.Events
         public void RemoveListener(Action listener) => baseEvent -= listener;
     }
 
-    public class GameEventController<T>
+    public class EventController<T>
     {
         public event Action<T> baseEvent;
         public void InvokeEvent(T type) => baseEvent?.Invoke(type);

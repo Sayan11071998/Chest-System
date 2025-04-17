@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using System;
 using ChestSystem.Events;
 using ChestSystem.Core;
-using ChestSystem.Command;
 
 namespace ChestSystem.UI.Components
 {
@@ -30,7 +29,6 @@ namespace ChestSystem.UI.Components
         private CanvasGroup canvasGroup;
         private Coroutine fadeCoroutine;
         private RectTransform rectTransform;
-        private Action onUndoClicked;
 
         public static event Action OnNotificationClosed;
         public static event Action OnUndoButtonClicked;
