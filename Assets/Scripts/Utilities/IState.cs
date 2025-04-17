@@ -5,6 +5,6 @@ namespace ChestSystem.Utilities
         public void OnStateEnter();
         public void Update();
         public void OnStateExit();
-        void HandleChestClicked();
+        public void HandleChestClicked();
     }
 }
