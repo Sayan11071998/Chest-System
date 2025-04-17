@@ -2,6 +2,7 @@ using ChestSystem.Chest.Core;
 using ChestSystem.Chest.Data;
 using ChestSystem.Command.AbstractCommand;
 using ChestSystem.Player.Core;
+using UnityEngine;
 
 namespace ChestSystem.Command.ConcreteCommand
 {
@@ -12,6 +13,7 @@ namespace ChestSystem.Command.ConcreteCommand
         private int gemCost;
         private int previousPlayerGems;
         private float previousUnlockTime;
+        private Sprite previousChestSprite;
         private ChestState previousState;
 
         public void Execute(PlayerService playerService, ChestController chestController)
@@ -21,6 +23,7 @@ namespace ChestSystem.Command.ConcreteCommand
 
             previousPlayerGems = playerService.PlayerController.GemsCount;
             previousUnlockTime = chestController.ChestModel.RemainingUnlockTime;
+            previousChestSprite = chestController.ChestModel.ChestSprite;
             previousState = chestController.CurrentState;
 
             gemCost = chestController.ChestModel.CurrentGemCost;
@@ -42,14 +45,21 @@ namespace ChestSystem.Command.ConcreteCommand
             {
                 ChestModel model = chestController.ChestModel;
 
-                var field = typeof(ChestModel).GetField("remainingUnlockTime",
+                var timeField = typeof(ChestModel).GetField("remainingUnlockTime",
                     System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
-                if (field != null)
-                    field.SetValue(model, previousUnlockTime);
+                if (timeField != null)
+                    timeField.SetValue(model, previousUnlockTime);
+
+                var spriteField = typeof(ChestModel).GetField("chestSprite",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+                if (spriteField != null)
+                    spriteField.SetValue(model, previousChestSprite);
 
                 model.UpdateGemCost();
                 chestController.ChestStateMachine.ChangeState(ChestState.UNLOCKING);
+                chestController.ChestView.UpdateChestSprite(previousChestSprite);
             }
         }
     }
