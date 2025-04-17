@@ -106,6 +106,8 @@ What challenging game systems have *you* built recently? I’d love to hear your
 
 ![Image](https://github.com/user-attachments/assets/ebb9b99a-5fce-44e2-b772-7d9a339cf042)
 
+![Image](https://github.com/user-attachments/assets/f2049160-71c2-4615-a18e-2b883529c9fa)
+
 ![Image](https://github.com/user-attachments/assets/cc0dc3c7-ca93-4127-bc80-e0ffe2f538ac)
 
 ![Image](https://github.com/user-attachments/assets/b17b7bef-c961-4f49-bd7c-ccb098dd411c)
