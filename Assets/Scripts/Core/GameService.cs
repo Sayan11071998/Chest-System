@@ -9,6 +9,7 @@ using ChestSystem.Utilities;
 using UnityEngine;
 using ChestSystem.Sound;
 using ChestSystem.Chest.Data;
+using ChestSystem.Command;
 
 namespace ChestSystem.Core
 {
@@ -17,6 +18,7 @@ namespace ChestSystem.Core
         public PlayerService playerService { get; private set; }
         public ChestService chestService { get; private set; }
         public SoundService soundService { get; private set; }
+        public CommandInvoker commandInvoker { get; private set; }
 
         [Header("Player")]
         [SerializeField] private PlayerView playerView;
@@ -41,6 +43,7 @@ namespace ChestSystem.Core
             playerService = new PlayerService(playerView, playerScriptableObject);
             chestService = new ChestService(chests, chestPrefab, emptySlotPrefab, chestScrollContent, initialMaxChestSlots);
             soundService = new SoundService(soundScriptableObject, soundEffectsSource, backgroundMusicSource);
+            commandInvoker = new CommandInvoker();
         }
 
         private void OnDestroy()

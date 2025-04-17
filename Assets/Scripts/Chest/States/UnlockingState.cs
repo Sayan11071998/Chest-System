@@ -8,6 +8,7 @@ using System.Collections;
 using ChestSystem.Events;
 using ChestSystem.Chest.Data;
 using ChestSystem.Chest.Utilities;
+using ChestSystem.Command.ConcreteCommand;
 
 namespace ChestSystem.Chest.States
 {
@@ -78,9 +79,10 @@ namespace ChestSystem.Chest.States
 
             if (playerGems >= gemCost)
             {
-                GameService.Instance.playerService.PlayerController.UpdateGemsCount(playerGems - gemCost);
+                InstantChestUnlockCommand unlockCommand = new InstantChestUnlockCommand();
+                unlockCommand.Execute(GameService.Instance.playerService, chestController);
+                GameService.Instance.commandInvoker.ExecuteCommand(unlockCommand);
                 EventService.Instance.OnGemsSpend.InvokeEvent();
-                CompleteUnlocking();
             }
         }
 
