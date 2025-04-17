@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using ChestSystem.Chest.Core;
 using ChestSystem.Chest.Data;
+using ChestSystem.UI.Data;
 
 namespace ChestSystem.Chest.UI
 {
@@ -40,7 +41,7 @@ namespace ChestSystem.Chest.UI
             if (gemCostContainer != null)
                 gemCostContainer.SetActive(false);
 
-            UpdateStatusText("LOCKED");
+            UpdateStatusText(UIStrings.Locked);
         }
 
         private void OnChestClicked()
@@ -62,16 +63,16 @@ namespace ChestSystem.Chest.UI
                     switch (chestController.CurrentState)
                     {
                         case ChestState.LOCKED:
-                            statusText.text = "LOCKED";
+                            statusText.text = UIStrings.Locked;
                             break;
                         case ChestState.UNLOCKING:
-                            statusText.text = "UNLOCKING";
+                            statusText.text = UIStrings.Unlocking;
                             break;
                         case ChestState.UNLOCKED:
-                            statusText.text = "UNLOCKED";
+                            statusText.text = UIStrings.Unlocked;
                             break;
                         case ChestState.COLLECTED:
-                            statusText.text = "COLLECTED";
+                            statusText.text = UIStrings.Collected;
                             break;
                     }
                 }

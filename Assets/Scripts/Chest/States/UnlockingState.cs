@@ -9,6 +9,8 @@ using ChestSystem.Events;
 using ChestSystem.Chest.Data;
 using ChestSystem.Chest.Utilities;
 using ChestSystem.Command.ConcreteCommand;
+using ChestSystem.UI.Data;
+using System;
 
 namespace ChestSystem.Chest.States
 {
@@ -26,7 +28,7 @@ namespace ChestSystem.Chest.States
 
         public void OnStateEnter()
         {
-            chestController.ChestView.UpdateStatusText("UNLOCKING");
+            chestController.ChestView.UpdateStatusText(UIStrings.Unlocking);
             chestController.ChestView.SetGemCostVisible(true);
             StartUnlocking();
         }
@@ -47,21 +49,21 @@ namespace ChestSystem.Chest.States
             int playerGems = GameService.Instance.playerService.PlayerController.GemsCount;
             string chestType = chestController.ChestView.ChestType.ToString();
 
-            string title = $"INSTANT UNLOCK - {chestType} CHEST";
+            string title = string.Format(UIStrings.InstantUnlockChest, chestType);
             string message;
             string buttonText;
 
             if (playerGems >= gemCost)
             {
-                message = $"Would you like to instantly unlock this {chestType.ToLower()} chest for {gemCost} gems?\n\nYou have: {playerGems} gems\nCost: {gemCost} gems\n\nTap to confirm!";
-                buttonText = "CONFIRM";
+                message = string.Format(UIStrings.WouldLikeInstantUnlock, chestType.ToLower(), gemCost, playerGems);
+                buttonText = UIStrings.Confirm;
                 NotificationManager.Instance.ShowNotification(title, message, buttonText);
                 NotificationPanel.OnNotificationClosed += ConfirmInstantUnlock;
             }
             else
             {
-                message = $"You don't have enough gems to instantly unlock this chest.\n\nYou have: {playerGems} gems\nRequired: {gemCost} gems\n\nWait for the timer or get more gems!";
-                buttonText = "OKAY";
+                message = String.Format(UIStrings.DoNotHaveEnoughGems, playerGems, gemCost);
+                buttonText = UIStrings.Okay;
                 NotificationManager.Instance.ShowNotification(title, message, buttonText);
             }
         }

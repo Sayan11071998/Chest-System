@@ -6,6 +6,7 @@ using ChestSystem.UI.Components;
 using ChestSystem.UI.Core;
 using ChestSystem.Utilities;
 using ChestSystem.Chest.Utilities;
+using ChestSystem.UI.Data;
 
 namespace ChestSystem.Chest.States
 {
@@ -25,7 +26,7 @@ namespace ChestSystem.Chest.States
 
         public void OnStateEnter()
         {
-            chestController.ChestView.UpdateStatusText("UNLOCKED");
+            chestController.ChestView.UpdateStatusText(UIStrings.Unlocked);
             chestController.ChestView.UpdateTimerDisplay();
             chestController.ChestView.SetGemCostVisible(false);
 
@@ -55,9 +56,9 @@ namespace ChestSystem.Chest.States
 
         private void ShowRewardsNotification()
         {
-            string title = $"{chestController.ChestView.ChestType} CHEST REWARDS";
-            string message = $"You are about to collect:\n\n{coinsAwarded} coins\n{gemsAwarded} gems\n\nTap to collect!";
-            string buttonText = "COLLECT";
+            string title = string.Format(UIStrings.ChestRewards, chestController.ChestView.ChestType);
+            string message = string.Format(UIStrings.AboutToCollect, coinsAwarded, gemsAwarded);
+            string buttonText = UIStrings.Collect;
 
             NotificationManager.Instance.ShowNotification(title, message, buttonText);
             NotificationPanel.OnNotificationClosed += CollectChestAfterNotification;

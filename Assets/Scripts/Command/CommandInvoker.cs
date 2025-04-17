@@ -2,6 +2,7 @@ using ChestSystem.Command.AbstractCommand;
 using ChestSystem.UI.Core;
 using System.Collections.Generic;
 using ChestSystem.Events;
+using ChestSystem.UI.Data;
 
 namespace ChestSystem.Command
 {
@@ -38,10 +39,10 @@ namespace ChestSystem.Command
         {
             if (commandHistory.Count > 0)
             {
-                string title = "INSTANT UNLOCK COMPLETED";
-                string message = "Chest has been instantly unlocked with gems.";
-                string buttonText = "OK";
-                string undoButtonText = "UNDO";
+                string title = UIStrings.InstantUnlockCompleted;
+                string message = UIStrings.ChestInstantlyUnlockedWithGems;
+                string buttonText = UIStrings.Okay;
+                string undoButtonText = UIStrings.Undo;
 
                 NotificationManager.Instance.ShowNotificationWithUndo(title, message, buttonText, undoButtonText);
             }
