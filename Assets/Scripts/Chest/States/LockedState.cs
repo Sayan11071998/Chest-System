@@ -4,6 +4,7 @@ using ChestSystem.Core;
 using ChestSystem.UI.Core;
 using ChestSystem.Utilities;
 using ChestSystem.Chest.Utilities;
+using ChestSystem.UI.Data;
 
 namespace ChestSystem.Chest.States
 {
@@ -21,7 +22,7 @@ namespace ChestSystem.Chest.States
         public void OnStateEnter()
         {
             chestController.ChestView.SetGemCostVisible(false);
-            chestController.ChestView.UpdateStatusText("LOCKED");
+            chestController.ChestView.UpdateStatusText(UIStrings.Locked);
         }
 
         public void OnStateExit() { }
@@ -36,16 +37,16 @@ namespace ChestSystem.Chest.States
             {
                 chestService.SetUnlockingChest(chestController.ChestView);
                 chestController.ChestView.SetGemCostVisible(true);
-                chestController.ChestView.UpdateStatusText("UNLOCKING");
+                chestController.ChestView.UpdateStatusText(UIStrings.Unlocking);
                 chestController.SetRegisteredAsUnlocking(true);
 
                 stateMachine.ChangeState(ChestState.UNLOCKING);
             }
             else
             {
-                string title = "CHEST LOCKED";
-                string message = "Another chest is already being unlocked!";
-                string buttonText = "CLOSE";
+                string title = UIStrings.ChestLocked;
+                string message = UIStrings.AnotherChestIsAlreadyBeingUnlocked;
+                string buttonText = UIStrings.Close;
                 NotificationManager.Instance.ShowNotification(title, message, buttonText);
             }
         }
