@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 using ChestSystem.Events;
+using ChestSystem.Core;
+using ChestSystem.Command;
 
 namespace ChestSystem.UI.Components
 {
@@ -15,6 +17,11 @@ namespace ChestSystem.UI.Components
         [SerializeField] private Button button;
         [SerializeField] private TextMeshProUGUI buttonText;
 
+        [Header("Undo Button")]
+        [SerializeField] private Button undoButton;
+        [SerializeField] private TextMeshProUGUI undoButtonText;
+        [SerializeField] private GameObject undoButtonContainer;
+
         [Header("Animation Settings")]
         [SerializeField] private float fadeInDuration = 0.3f;
         [SerializeField] private float fadeOutDuration = 0.2f;
@@ -23,8 +30,10 @@ namespace ChestSystem.UI.Components
         private CanvasGroup canvasGroup;
         private Coroutine fadeCoroutine;
         private RectTransform rectTransform;
+        private Action onUndoClicked;
 
         public static event Action OnNotificationClosed;
+        public static event Action OnUndoButtonClicked;
 
         private void Awake()
         {
@@ -35,6 +44,12 @@ namespace ChestSystem.UI.Components
                 canvasGroup = gameObject.AddComponent<CanvasGroup>();
 
             button.onClick.AddListener(CloseNotification);
+
+            if (undoButton != null)
+                undoButton.onClick.AddListener(HandleUndoClicked);
+
+            if (undoButtonContainer != null)
+                undoButtonContainer.SetActive(false);
 
             canvasGroup.alpha = 0;
             canvasGroup.interactable = false;
@@ -47,6 +62,31 @@ namespace ChestSystem.UI.Components
             titleText.text = title.ToUpper();
             messageText.text = message;
             this.buttonText.text = buttonText;
+
+            if (undoButtonContainer != null)
+                undoButtonContainer.SetActive(false);
+
+            gameObject.SetActive(true);
+
+            if (fadeCoroutine != null)
+                StopCoroutine(fadeCoroutine);
+
+            fadeCoroutine = StartCoroutine(FadeIn());
+            EventService.Instance.OnNotificationShow.InvokeEvent();
+        }
+
+        public void ShowNotificationWithUndo(string title, string message, string buttonText, string undoButtonText)
+        {
+            titleText.text = title.ToUpper();
+            messageText.text = message;
+            this.buttonText.text = buttonText;
+
+            if (undoButtonContainer != null)
+            {
+                undoButtonContainer.SetActive(true);
+                this.undoButtonText.text = undoButtonText;
+            }
+
             gameObject.SetActive(true);
 
             if (fadeCoroutine != null)
@@ -65,6 +105,16 @@ namespace ChestSystem.UI.Components
 
             OnNotificationClosed?.Invoke();
             EventService.Instance.OnNotificationClose.InvokeEvent();
+        }
+
+        private void HandleUndoClicked()
+        {
+            OnUndoButtonClicked?.Invoke();
+
+            if (GameService.Instance != null && GameService.Instance.commandInvoker != null)
+                GameService.Instance.commandInvoker.Undo();
+
+            CloseNotification();
         }
 
         private IEnumerator FadeIn()
@@ -115,6 +165,11 @@ namespace ChestSystem.UI.Components
             gameObject.SetActive(false);
         }
 
-        private void OnDestroy() => button.onClick.RemoveListener(CloseNotification);
+        private void OnDestroy()
+        {
+            button.onClick.RemoveListener(CloseNotification);
+            if (undoButton != null)
+                undoButton.onClick.RemoveListener(HandleUndoClicked);
+        }
     }
 }

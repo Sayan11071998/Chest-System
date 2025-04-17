@@ -30,5 +30,12 @@ namespace ChestSystem.UI.Core
 
             activePanel.ShowNotification(title, message, buttonText);
         }
+
+        public void ShowNotificationWithUndo(string title, string message, string buttonText, string undoButtonText)
+        {
+            if (activePanel == null) return;
+
+            activePanel.ShowNotificationWithUndo(title, message, buttonText, undoButtonText);
+        }
     }
 }

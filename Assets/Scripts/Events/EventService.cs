@@ -25,6 +25,7 @@ namespace ChestSystem.Events
         public GameEventController OnNotificationShow { get; private set; }
         public GameEventController OnNotificationClose { get; private set; }
         public GameEventController OnGemsSpend { get; private set; }
+        public GameEventController OnCommandUndo { get; private set; }
 
         public EventService()
         {
@@ -38,6 +39,7 @@ namespace ChestSystem.Events
             OnNotificationShow = new GameEventController();
             OnNotificationClose = new GameEventController();
             OnGemsSpend = new GameEventController();
+            OnCommandUndo = new GameEventController();
         }
     }
 }
