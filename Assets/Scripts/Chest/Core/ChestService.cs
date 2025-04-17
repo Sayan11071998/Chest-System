@@ -5,6 +5,7 @@ using ChestSystem.Chest.Utilities;
 using ChestSystem.Events;
 using ChestSystem.UI.Components;
 using ChestSystem.UI.Core;
+using ChestSystem.UI.Data;
 using ChestSystem.UI.Pools;
 using UnityEngine;
 
@@ -116,7 +117,7 @@ namespace ChestSystem.Chest.Core
         {
             if (activeEmptySlots.Count == 0)
             {
-                NotificationManager.Instance.ShowNotification("CHEST SLOTS FULL", "All chest slots are currently full. Add more slots or open existing chests first.", "CLOSE");
+                NotificationManager.Instance.ShowNotification(UIStrings.ChestSlotsFull, UIStrings.AllChestsAreCurrentlyFull, UIStrings.Close);
                 return;
             }
 
