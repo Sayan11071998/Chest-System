@@ -92,6 +92,7 @@ What challenging game systems have *you* built recently? I’d love to hear your
 ---
 
 ## Play Link
+https://sayannandi.itch.io/chest-system
 
 [![Watch the video](https://img.youtube.com/vi/ZzMUREyAbMA/maxresdefault.jpg)](https://youtu.be/ZzMUREyAbMA)
 ### [Gameplay Video](https://youtu.be/ZzMUREyAbMA)
