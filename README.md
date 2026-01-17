@@ -72,9 +72,15 @@ When a player instant-unlocks, `InstantChestUnlockCommand` executes, storing `pr
 The undo system needed to reverse gem spending and restore the unlocking timer. I implemented `ICommand` with `Execute()` and `Undo()` methods, storing all state before modifications. The tricky part was accessing private fields in ChestModel during undo.
 
 I used reflection to set `remainingUnlockTime` and `chestSprite` directly:
+
 ```csharp
-FieldInfo remainingTimeField = typeof(ChestModel).GetField("remainingUnlockTime", BindingFlags.NonPublic | BindingFlags.Instance);
-remainingTimeField?.SetValue(chestModel, previousUnlockTime);
+var timeField = typeof(ChestModel).GetField(
+    "remainingUnlockTime",
+    System.Reflection.BindingFlags.NonPublic |
+    System.Reflection.BindingFlags.Instance
+);
+
+timeField.SetValue(model, previousUnlockTime);
 ```
 
 This approach is fragile but necessary since ChestModel doesn't expose setters. For production, I'd add `RestoreState(float time, Sprite sprite)` to ChestModel to avoid reflection. CommandInvoker maintains a `Stack<ICommand>` and shows an undo notification after execution, hooking into `NotificationPanel.OnNotificationClosed` event to trigger the undo.
@@ -90,10 +96,11 @@ ChestPool and EmptySlotPool both extend `GenericObjectPool<T>` but implement dif
 ### Event-Driven Sound System
 
 SoundService registers listeners for all game events in a single method. Each event type triggers a corresponding sound:
+
 ```csharp
-EventService.ChestUnlockStarted.AddListener(OnChestUnlockStarted);
-EventService.ChestUnlockCompleted.AddListener(OnChestUnlockCompleted);
-EventService.ChestCollected.AddListener(OnChestCollected);
+EventService.Instance.OnChestSpawned.AddListener(
+    chest => PlaySoundEffects(SoundType.CHEST_CLICK)
+);
 ```
 
 The problem was memory leaks - if SoundService didn't unregister listeners before destruction, event subscriptions persisted. I implemented `UnregisterSoundEventListeners()` called in `GameService.OnDestroy()`, removing all registered callbacks. The event system uses `EventController<T>` with generic `Action<T>` delegates, allowing type-safe event invocations.
