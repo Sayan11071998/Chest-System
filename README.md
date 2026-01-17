@@ -59,20 +59,15 @@ flowchart TD
 
 ## Key Technical Systems
 
-### State Machine with Dynamic Unlock Timing
+* ### State Machine with Dynamic Unlock Timing
+    - Chests transition through four states using a state machine that implements `IState`. The critical challenge was handling real-time unlocking with instant unlock interruptions. UnlockingState runs a coroutine that updates `ChestModel.RemainingUnlockTime` every second, recalculating gem cost dynamically.
+    - The gem cost formula uses `MINUTES_PER_GEM = 10f`, so a 1-hour chest costs 6 gems initially but drops to 3 gems after 30 minutes. I implemented `UpdateGemCost()` to recalculate on every timer tick, ensuring accurate pricing. The edge case was chests with < 10 minutes remaining - I added a minimum cost check to prevent 0-gem unlocks.
+    - When a player instant-unlocks, `InstantChestUnlockCommand` executes, storing `previousState`, `previousUnlockTime`, and `previousPlayerGems` for undo functionality. The command pattern needed to restore the UnlockingState's coroutine, so I used `ChestStateMachine.ChangeState()` which calls `OnStateEnter()` - this restarts the timer coroutine with the restored `RemainingUnlockTime`.
 
-Chests transition through four states using a state machine that implements `IState`. The critical challenge was handling real-time unlocking with instant unlock interruptions. UnlockingState runs a coroutine that updates `ChestModel.RemainingUnlockTime` every second, recalculating gem cost dynamically.
-
-The gem cost formula uses `MINUTES_PER_GEM = 10f`, so a 1-hour chest costs 6 gems initially but drops to 3 gems after 30 minutes. I implemented `UpdateGemCost()` to recalculate on every timer tick, ensuring accurate pricing. The edge case was chests with < 10 minutes remaining - I added a minimum cost check to prevent 0-gem unlocks.
-
-When a player instant-unlocks, `InstantChestUnlockCommand` executes, storing `previousState`, `previousUnlockTime`, and `previousPlayerGems` for undo functionality. The command pattern needed to restore the UnlockingState's coroutine, so I used `ChestStateMachine.ChangeState()` which calls `OnStateEnter()` - this restarts the timer coroutine with the restored `RemainingUnlockTime`.
-
-### Command Pattern for Undoable Actions
-
-The undo system needed to reverse gem spending and restore the unlocking timer. I implemented `ICommand` with `Execute()` and `Undo()` methods, storing all state before modifications. The tricky part was accessing private fields in ChestModel during undo.
-
-I used reflection to set `remainingUnlockTime` and `chestSprite` directly:
-
+* ### Command Pattern for Undoable Actions
+    - The undo system needed to reverse gem spending and restore the unlocking timer. I implemented `ICommand` with `Execute()` and `Undo()` methods, storing all state before modifications. The tricky part was accessing private fields in ChestModel during undo.
+    - I used reflection to set `remainingUnlockTime` and `chestSprite` directly:
+ 
 ```csharp
 var timeField = typeof(ChestModel).GetField(
     "remainingUnlockTime",
@@ -83,7 +78,7 @@ var timeField = typeof(ChestModel).GetField(
 timeField.SetValue(model, previousUnlockTime);
 ```
 
-This approach is fragile but necessary since ChestModel doesn't expose setters. For production, I'd add `RestoreState(float time, Sprite sprite)` to ChestModel to avoid reflection. CommandInvoker maintains a `Stack<ICommand>` and shows an undo notification after execution, hooking into `NotificationPanel.OnNotificationClosed` event to trigger the undo.
+    - This approach is fragile but necessary since ChestModel doesn't expose setters. For production, I'd add `RestoreState(float time, Sprite sprite)` to ChestModel to avoid reflection. CommandInvoker maintains a `Stack<ICommand>` and shows an undo notification after execution, hooking into `NotificationPanel.OnNotificationClosed` event to trigger the undo.
 
 ### Object Pooling for Dynamic Chest Management
 
