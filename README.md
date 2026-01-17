@@ -42,8 +42,6 @@ flowchart TD
     PlayerController --> PlayerView[PlayerView]
     PlayerController --> PlayerModel[PlayerModel]
     
-    ChestStateMachine --> PlayerView
-    
     CommandInvoker --> CommandStack[Command Stack]
     
     classDef serviceStyle fill:#5B9BD5,stroke:#333,stroke-width:2px,color:#fff
