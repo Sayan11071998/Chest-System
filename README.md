@@ -123,11 +123,11 @@ The downside is hidden dependencies and harder testing. For production, I'd use 
 
 ## Technical Challenges
 
-**Dynamic Slot Management:** Maintaining visual order when removing chests required tracking sibling indices and shifting all subsequent UI elements. I had to handle the edge case where removing a chest would leave fewer than the minimum slots, conditionally spawning EmptySlotViews to maintain the required slot count.
+- **Dynamic Slot Management:** Maintaining visual order when removing chests required tracking sibling indices and shifting all subsequent UI elements. I had to handle the edge case where removing a chest would leave fewer than the minimum slots, conditionally spawning EmptySlotViews to maintain the required slot count.
 
-**Coroutine Lifecycle Management:** UnlockingState's timer coroutine needed to stop cleanly when instant-unlocking. I stored the Coroutine reference and called `StopCoroutine()` in `OnStateExit()`, preventing multiple timers from running simultaneously.
+- **Coroutine Lifecycle Management:** UnlockingState's timer coroutine needed to stop cleanly when instant-unlocking. I stored the Coroutine reference and called `StopCoroutine()` in `OnStateExit()`, preventing multiple timers from running simultaneously.
 
-**Reflection for State Restoration:** Undo functionality required modifying private ChestModel fields. Using reflection was necessary but adds fragility - if field names change, the code breaks at runtime. I added null checks on FieldInfo to prevent crashes if fields are renamed.
+- **Reflection for State Restoration:** Undo functionality required modifying private ChestModel fields. Using reflection was necessary but adds fragility - if field names change, the code breaks at runtime. I added null checks on FieldInfo to prevent crashes if fields are renamed.
 
 ---
 
