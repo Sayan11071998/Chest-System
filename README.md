@@ -79,39 +79,28 @@ flowchart TD
     
   * This approach is fragile but necessary since ChestModel doesn't expose setters. For production, I'd add **RestoreState(float time, Sprite sprite)** to ChestModel to avoid reflection. CommandInvoker maintains a **Stack<ICommand>** and shows an undo notification after execution, hooking into **NotificationPanel.OnNotificationClosed** event to trigger the undo.uction, I'd add `RestoreState(float time, Sprite sprite)` to ChestModel to avoid reflection. CommandInvoker maintains a `Stack<ICommand>` and shows an undo notification after execution, hooking into `NotificationPanel.OnNotificationClosed` event to trigger the undo.
 
-### Object Pooling for Dynamic Chest Management
+* ### Object Pooling for Dynamic Chest Management
+    - The system spawns/despawns chests frequently, so I built `GenericObjectPool<T>` using a `List<PooledItem<T>>` that tracks `isUsed` flags. When requesting a chest, `GetItem()` searches for an unused instance before calling `CreateItem()`.
+    - The challenge was managing sibling indices when removing chests. `RemoveChestAndMaintainMinimumSlots()` needed to preserve visual order while ensuring at least 4 slots remain. I store the deleted chest's siblingIndex, then shift all subsequent elements down by calling `SetSiblingIndex(index - 1)`. If total slots drop below the minimum, I spawn an EmptySlotView at the deleted position.
+    - ChestPool and EmptySlotPool both extend `GenericObjectPool<T>` but implement different `CreateItem()` methods - ChestPool instantiates ChestView prefabs, while EmptySlotPool creates EmptySlotView instances. When returning to pool, chests call `OnReturnToPool()` which triggers `Cleanup()` to unregister from `ChestService.currentlyUnlockingChest` if needed.
 
-The system spawns/despawns chests frequently, so I built `GenericObjectPool<T>` using a `List<PooledItem<T>>` that tracks `isUsed` flags. When requesting a chest, `GetItem()` searches for an unused instance before calling `CreateItem()`.
+* ### Event-Driven Sound System
+    - SoundService registers listeners for all game events in a single method. Each event type triggers a corresponding sound:
+     ```csharp
+    EventService.Instance.OnChestSpawned.AddListener(
+        chest => PlaySoundEffects(SoundType.CHEST_CLICK)
+    );
+    ```
+    - The problem was memory leaks - if SoundService didn't unregister listeners before destruction, event subscriptions persisted. I implemented `UnregisterSoundEventListeners()` called in `GameService.OnDestroy()`, removing all registered callbacks. The event system uses `EventController<T>` with generic `Action<T>` delegates, allowing type-safe event invocations.
 
-The challenge was managing sibling indices when removing chests. `RemoveChestAndMaintainMinimumSlots()` needed to preserve visual order while ensuring at least 4 slots remain. I store the deleted chest's siblingIndex, then shift all subsequent elements down by calling `SetSiblingIndex(index - 1)`. If total slots drop below the minimum, I spawn an EmptySlotView at the deleted position.
+* ### Notification System with Conditional UI
+    - NotificationPanel handles two display modes: standard notifications and undo-enabled notifications. `ShowNotificationWithUndo()` activates an extra `undoButtonContainer` GameObject that's hidden in normal notifications.
+    - The animation system uses a CanvasGroup for fade effects and `RectTransform.localScale` for popup scaling. I implemented coroutines that interpolate alpha and scale values using an AnimationCurve over `fadeInDuration`. The tricky part was handling notification interruptions - if a new notification appears while fading, I stop the current coroutine before starting a new one to prevent overlapping animations.
+    - Static event `Action OnNotificationClosed` allows UnlockedState to defer chest collection until the player dismisses the reward notification. I subscribe in `ShowRewardsNotification()` and unsubscribe in `CollectChestAfterNotification()` to avoid duplicate callbacks.
 
-ChestPool and EmptySlotPool both extend `GenericObjectPool<T>` but implement different `CreateItem()` methods - ChestPool instantiates ChestView prefabs, while EmptySlotPool creates EmptySlotView instances. When returning to pool, chests call `OnReturnToPool()` which triggers `Cleanup()` to unregister from `ChestService.currentlyUnlockingChest` if needed.
-
-### Event-Driven Sound System
-
-SoundService registers listeners for all game events in a single method. Each event type triggers a corresponding sound:
-
-```csharp
-EventService.Instance.OnChestSpawned.AddListener(
-    chest => PlaySoundEffects(SoundType.CHEST_CLICK)
-);
-```
-
-The problem was memory leaks - if SoundService didn't unregister listeners before destruction, event subscriptions persisted. I implemented `UnregisterSoundEventListeners()` called in `GameService.OnDestroy()`, removing all registered callbacks. The event system uses `EventController<T>` with generic `Action<T>` delegates, allowing type-safe event invocations.
-
-### Notification System with Conditional UI
-
-NotificationPanel handles two display modes: standard notifications and undo-enabled notifications. `ShowNotificationWithUndo()` activates an extra `undoButtonContainer` GameObject that's hidden in normal notifications.
-
-The animation system uses a CanvasGroup for fade effects and `RectTransform.localScale` for popup scaling. I implemented coroutines that interpolate alpha and scale values using an AnimationCurve over `fadeInDuration`. The tricky part was handling notification interruptions - if a new notification appears while fading, I stop the current coroutine before starting a new one to prevent overlapping animations.
-
-Static event `Action OnNotificationClosed` allows UnlockedState to defer chest collection until the player dismisses the reward notification. I subscribe in `ShowRewardsNotification()` and unsubscribe in `CollectChestAfterNotification()` to avoid duplicate callbacks.
-
-### Service Locator for Dependency Management
-
-GameService implements `GenericMonoSingleton<T>` and initializes all services in `Awake()`. This creates a global access point: `GameService.Instance.chestService`. The advantage is loose coupling - LockedState doesn't need constructor injection of ChestService, it simply calls `GameService.Instance`.
-
-The downside is hidden dependencies and harder testing. For production, I'd use a DI framework like Zenject. The singleton pattern prevents multiple GameService instances by checking `if (instance == null)` in `Awake()` and destroying duplicates.
+* ### Service Locator for Dependency Management
+    - GameService implements `GenericMonoSingleton<T>` and initializes all services in `Awake()`. This creates a global access point: `GameService.Instance.chestService`. The advantage is loose coupling - LockedState doesn't need constructor injection of ChestService, it simply calls `GameService.Instance`.
+    - The downside is hidden dependencies and harder testing. For production, I'd use a DI framework like Zenject. The singleton pattern prevents multiple GameService instances by checking `if (instance == null)` in `Awake()` and destroying duplicates.
 
 ---
 
