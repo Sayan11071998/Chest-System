@@ -1,93 +1,134 @@
-# 🚀 Chest System – Modular & Scalable Reward System for Unity
+# Game System/Framework | Unity | C#
 
-Welcome to my latest Unity project—a **fully modular and scalable Chest System**, inspired by mobile games like *Clash Royale*. This system isn't just about unlocking rewards—it's an architectural showcase that balances fun gameplay with powerful extensibility. 🎮
+A chest unlock system with state-driven gameplay, command pattern for undo functionality, and event-based architecture. Features object pooling for performance optimization and service locator pattern for dependency management.
 
----
-
-## Key Features & Functionality
-
-### Randomized Chest Generation
-Each chest is generated with randomized properties (from **Common** to **Legendary**), bringing unpredictability and excitement to every session.
-
-###  Timed Unlocking with a Twist
-Chests use real-time countdowns to build anticipation. Players can either wait or spend **gems** to unlock instantly—introducing strategy and choice into progression. Plus, with the **Undo** feature implemented via the Command Pattern, players can revert an instant unlock if they change their mind.
-
-### Dynamic UI Feedback
-Chests transition through visual states—**Locked**, **Unlocking**, **Unlocked**, and **Collected**—each with engaging animations and satisfying sound feedback.
-
-### Inventory & Reward Management
-Players can manage their expanding inventory with ease. Rewards like **coins** and **gems** are delivered through delightful animations to enhance the user experience.
+**Tech Stack:** Unity 3D | C# | State Pattern | Command Pattern | Observer Pattern | Object Pool Pattern
 
 ---
 
-## Architectural & Design Patterns
+## Development Approach
 
-### Model-View-Controller (MVC)
-Separation of data, UI, and logic improves clarity, maintainability, and testability of the codebase.
+I structured the system around MVC with a service layer managing cross-cutting concerns. GameService acts as a service locator, providing access to ChestService, PlayerService, SoundService, and CommandInvoker. Each chest maintains its own state machine, with ChestController coordinating between ChestView (UI) and ChestModel (data). When a player interacts with a chest, the state machine handles transitions while EventService broadcasts changes to registered listeners.
 
-### Service Locator Pattern
-A centralized `GameService` singleton ensures streamlined access to core systems, reducing coupling and simplifying dependency management.
+The challenge was managing multiple chests unlocking over real-time while maintaining only one active unlock timer. I solved this by having ChestService track `currentlyUnlockingChest` and rejecting new unlock attempts until the current chest completes. States handle their own logic - LockedState checks `CanStartUnlocking()` before transitioning, while UnlockingState runs a coroutine that decrements `RemainingUnlockTime` every second.
 
-### State Machine
-Robust handling of chest states ensures smooth transitions between different phases like **Locked**, **Unlocking**, **Unlocked**, etc.
-
-### Observer Pattern
-Event-driven design enables clean communication across game components, making the system modular and scalable.
-
-### Command Pattern
-Encapsulates actions—such as spending gems for an instant unlock—into command objects, allowing execution and **undo** operations. This design supports reverting an instant chest unlock, improving user control and maintainability.
-
-### Object Pooling
-Efficient use of object pooling minimizes instantiation overhead—crucial for maintaining smooth mobile performance.
-
----
-
-## Unity & C# Enhancements
-
-### Interfaces & Enums
-Type-safe and extensible system design to define chest behaviors, rarity types, and state handling.
-
-### ScriptableObjects for Configuration
-Flexible, data-driven design lets you configure chest properties and reward tables directly from the editor.
-
-### Generics & Extension Methods
-Reusable and flexible code components help keep everything DRY (*Don’t Repeat Yourself*).
-
-### Coroutines & Tweening
-Smooth, time-based effects and transitions for chest animations, countdowns, and UI feedback.
-
-### Custom Editor Tools
-Custom inspectors and tools simplify data entry and speed up iteration during development.
-
-### Canvas Groups for UI Transitions
-Professional-level UI transitions using canvas groups to create smooth fades and visibility control.
-
----
-
-## Software Engineering Best Practices
-
-### SOLID Principles
-Each class follows the Single Responsibility Principle, making it easy to extend, test, and maintain.
-
-### Dependency Injection
-Loose coupling of components makes the system adaptable and easier to integrate new features.
-
-### Namespaces & Abstraction
-Structured code organization using namespaces and interfaces ensures flexibility and scalability.
+```mermaid
+flowchart TD
+    GameService[GameService]
+    
+    GameService --> ChestService[ChestService]
+    GameService --> PlayerService[PlayerService]
+    GameService --> CommandInvoker[CommandInvoker]
+    GameService --> SoundService[SoundService]
+    
+    ChestService --> ChestController[ChestController]
+    ChestService --> ChestPool[ChestPool]
+    ChestService --> EmptySlotPool[EmptySlotPool]
+    
+    ChestController --> ChestView[ChestView]
+    ChestController --> ChestModel[ChestModel]
+    
+    ChestController --> ChestStateMachine[ChestStateMachine]
+    ChestPool --> ChestStateMachine
+    ChestModel --> ChestStateMachine
+    
+    ChestStateMachine --> LockedState[LockedState]
+    ChestStateMachine --> UnlockingState[UnlockingState]
+    ChestStateMachine --> UnlockedState[UnlockedState]
+    ChestStateMachine --> CollectedState[CollectedState]
+    
+    PlayerService --> PlayerController[PlayerController]
+    
+    PlayerController --> PlayerView[PlayerView]
+    PlayerController --> PlayerModel[PlayerModel]
+    
+    ChestStateMachine --> PlayerView
+    
+    CommandInvoker --> CommandStack[Command Stack]
+    
+    classDef serviceStyle fill:#5B9BD5,stroke:#333,stroke-width:2px,color:#fff
+    classDef chestServiceStyle fill:#70AD47,stroke:#333,stroke-width:2px
+    classDef stateMachineStyle fill:#F4B183,stroke:#333,stroke-width:2px
+    classDef commandStyle fill:#E57373,stroke:#333,stroke-width:2px
+    
+    class GameService serviceStyle
+    class ChestService chestServiceStyle
+    class ChestStateMachine stateMachineStyle
+    class CommandInvoker commandStyle
+```
 
 ---
 
-## Personal Reflections
+## Key Technical Systems
 
-Creating this Chest System has been a blend of **gameplay design** and **software architecture**. I’ve applied principles from enterprise software development to build a feature-rich system that’s fun to use and easy to expand.
+### State Machine with Dynamic Unlock Timing
 
-The modular design opens the door for future ideas—think loot tables, limited-time chests, or even player progression integrations.
+Chests transition through four states using a state machine that implements `IState`. The critical challenge was handling real-time unlocking with instant unlock interruptions. UnlockingState runs a coroutine that updates `ChestModel.RemainingUnlockTime` every second, recalculating gem cost dynamically.
+
+The gem cost formula uses `MINUTES_PER_GEM = 10f`, so a 1-hour chest costs 6 gems initially but drops to 3 gems after 30 minutes. I implemented `UpdateGemCost()` to recalculate on every timer tick, ensuring accurate pricing. The edge case was chests with < 10 minutes remaining - I added a minimum cost check to prevent 0-gem unlocks.
+
+When a player instant-unlocks, `InstantChestUnlockCommand` executes, storing `previousState`, `previousUnlockTime`, and `previousPlayerGems` for undo functionality. The command pattern needed to restore the UnlockingState's coroutine, so I used `ChestStateMachine.ChangeState()` which calls `OnStateEnter()` - this restarts the timer coroutine with the restored `RemainingUnlockTime`.
+
+### Command Pattern for Undoable Actions
+
+The undo system needed to reverse gem spending and restore the unlocking timer. I implemented `ICommand` with `Execute()` and `Undo()` methods, storing all state before modifications. The tricky part was accessing private fields in ChestModel during undo.
+
+I used reflection to set `remainingUnlockTime` and `chestSprite` directly:
+```csharp
+FieldInfo remainingTimeField = typeof(ChestModel).GetField("remainingUnlockTime", BindingFlags.NonPublic | BindingFlags.Instance);
+remainingTimeField?.SetValue(chestModel, previousUnlockTime);
+```
+
+This approach is fragile but necessary since ChestModel doesn't expose setters. For production, I'd add `RestoreState(float time, Sprite sprite)` to ChestModel to avoid reflection. CommandInvoker maintains a `Stack<ICommand>` and shows an undo notification after execution, hooking into `NotificationPanel.OnNotificationClosed` event to trigger the undo.
+
+### Object Pooling for Dynamic Chest Management
+
+The system spawns/despawns chests frequently, so I built `GenericObjectPool<T>` using a `List<PooledItem<T>>` that tracks `isUsed` flags. When requesting a chest, `GetItem()` searches for an unused instance before calling `CreateItem()`.
+
+The challenge was managing sibling indices when removing chests. `RemoveChestAndMaintainMinimumSlots()` needed to preserve visual order while ensuring at least 4 slots remain. I store the deleted chest's siblingIndex, then shift all subsequent elements down by calling `SetSiblingIndex(index - 1)`. If total slots drop below the minimum, I spawn an EmptySlotView at the deleted position.
+
+ChestPool and EmptySlotPool both extend `GenericObjectPool<T>` but implement different `CreateItem()` methods - ChestPool instantiates ChestView prefabs, while EmptySlotPool creates EmptySlotView instances. When returning to pool, chests call `OnReturnToPool()` which triggers `Cleanup()` to unregister from `ChestService.currentlyUnlockingChest` if needed.
+
+### Event-Driven Sound System
+
+SoundService registers listeners for all game events in a single method. Each event type triggers a corresponding sound:
+```csharp
+EventService.ChestUnlockStarted.AddListener(OnChestUnlockStarted);
+EventService.ChestUnlockCompleted.AddListener(OnChestUnlockCompleted);
+EventService.ChestCollected.AddListener(OnChestCollected);
+```
+
+The problem was memory leaks - if SoundService didn't unregister listeners before destruction, event subscriptions persisted. I implemented `UnregisterSoundEventListeners()` called in `GameService.OnDestroy()`, removing all registered callbacks. The event system uses `EventController<T>` with generic `Action<T>` delegates, allowing type-safe event invocations.
+
+### Notification System with Conditional UI
+
+NotificationPanel handles two display modes: standard notifications and undo-enabled notifications. `ShowNotificationWithUndo()` activates an extra `undoButtonContainer` GameObject that's hidden in normal notifications.
+
+The animation system uses a CanvasGroup for fade effects and `RectTransform.localScale` for popup scaling. I implemented coroutines that interpolate alpha and scale values using an AnimationCurve over `fadeInDuration`. The tricky part was handling notification interruptions - if a new notification appears while fading, I stop the current coroutine before starting a new one to prevent overlapping animations.
+
+Static event `Action OnNotificationClosed` allows UnlockedState to defer chest collection until the player dismisses the reward notification. I subscribe in `ShowRewardsNotification()` and unsubscribe in `CollectChestAfterNotification()` to avoid duplicate callbacks.
+
+### Service Locator for Dependency Management
+
+GameService implements `GenericMonoSingleton<T>` and initializes all services in `Awake()`. This creates a global access point: `GameService.Instance.chestService`. The advantage is loose coupling - LockedState doesn't need constructor injection of ChestService, it simply calls `GameService.Instance`.
+
+The downside is hidden dependencies and harder testing. For production, I'd use a DI framework like Zenject. The singleton pattern prevents multiple GameService instances by checking `if (instance == null)` in `Awake()` and destroying duplicates.
 
 ---
 
-## Let’s Connect!
+## Technical Challenges
 
-What challenging game systems have *you* built recently? I’d love to hear your stories and exchange ideas!
+**Dynamic Slot Management:** Maintaining visual order when removing chests required tracking sibling indices and shifting all subsequent UI elements. I had to handle the edge case where removing a chest would leave fewer than the minimum slots, conditionally spawning EmptySlotViews to maintain the required slot count.
+
+**Coroutine Lifecycle Management:** UnlockingState's timer coroutine needed to stop cleanly when instant-unlocking. I stored the Coroutine reference and called `StopCoroutine()` in `OnStateExit()`, preventing multiple timers from running simultaneously.
+
+**Reflection for State Restoration:** Undo functionality required modifying private ChestModel fields. Using reflection was necessary but adds fragility - if field names change, the code breaks at runtime. I added null checks on FieldInfo to prevent crashes if fields are renamed.
+
+---
+
+## What I Learned
+
+The State pattern simplified chest behavior by isolating state-specific logic - adding new states like "Repairing" would just require implementing `IState`. Command pattern's reversibility made undo trivial but required careful state capture before execution. Object pooling significantly reduced GC pressure, but managing pooled object lifecycle (cleanup, reinitialization) added complexity. Using a service locator created global coupling, making unit testing harder - dependency injection would improve testability but adds initialization complexity for small projects.
 
 ---
 
