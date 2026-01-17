@@ -67,15 +67,15 @@ flowchart TD
 * **Command Pattern for Undoable Actions**
   * The undo system needed to reverse gem spending and restore the unlocking timer. I implemented **ICommand** with **Execute()** and **Undo()** methods, storing all state before modifications. The tricky part was accessing private fields in ChestModel during undo.
   * I used reflection to set **remainingUnlockTime** and **chestSprite** directly:
-```csharp
-    var timeField = typeof(ChestModel).GetField(
-        "remainingUnlockTime",
-        System.Reflection.BindingFlags.NonPublic |
-        System.Reflection.BindingFlags.Instance
-    );
+    ```csharp
+        var timeField = typeof(ChestModel).GetField(
+            "remainingUnlockTime",
+            System.Reflection.BindingFlags.NonPublic |
+            System.Reflection.BindingFlags.Instance
+        );
     
-    timeField.SetValue(model, previousUnlockTime);
-```
+        timeField.SetValue(model, previousUnlockTime);
+    ```
     
   * This approach is fragile but necessary since ChestModel doesn't expose setters. For production, I'd add **RestoreState(float time, Sprite sprite)** to ChestModel to avoid reflection. CommandInvoker maintains a **Stack<ICommand>** and shows an undo notification after execution, hooking into **NotificationPanel.OnNotificationClosed** event to trigger the undo.uction, I'd add `RestoreState(float time, Sprite sprite)` to ChestModel to avoid reflection. CommandInvoker maintains a `Stack<ICommand>` and shows an undo notification after execution, hooking into `NotificationPanel.OnNotificationClosed` event to trigger the undo.
 
